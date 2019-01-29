@@ -86,7 +86,7 @@ pltype_frq <- locations_rel_matched %>% count(SAMPN,PERNO,place_type) %>%
 
 pltype_frq
 
-pltype_fq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
+pltype_frq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
 
 #' for each person, did they go to school/work on the diary day?
 locations_place_cat <- locations_rel_matched %>% 
