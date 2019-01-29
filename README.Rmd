@@ -17,23 +17,27 @@ library(tidyverse)
 GeoTrans project looking at fragmentation using sequence analysis
 
 
-## Introduction to this project 
-[Integrating git and Github into an R project](https://happygitwithr.com/)
+## Overview
+
+The primary goal of this project is to investigate the effects of activity and travel fragmentation on behavior. The current focus of the project is to reorganize and update the previous data analysis scripts. This will allow for future use of this workflow in larger-scale implementation of the analysis.
+
+### Useful links:
+
+* [Integrating git and Github into an R project](https://happygitwithr.com/)
+* Restructuring principles I will be using can be found in the article [project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
 
 
+### Restructuring of scripts
 
-Principles I will be using can be found in the article [Project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
+We want the project workflow to:
 
-
-My goals for this reorganization of the project are for it to...
-
-* Flow well
-* Have an organizational scheme
+* Have a clear organizational scheme
 * Have each script be one piece (break down the workflow into small pieces that are each in their own script)
 * Bring over all necessary pieces from the old scripts to the new ones. 
 
 
-TIPS FOR MYSELF (directly from that article ["project-oriented workflow".](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
+
+TIPS FOR MYSELF (directly from the article [project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
 )
 
 1. Isolate code that creates an object that takes a long time to create in its own script.
@@ -60,6 +64,15 @@ Eventual goals:
 Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I need to learn what the best way to deal with data in projects is.
 
 
+<details>
+
+<summary>Session info</summary>
+```{r}
+devtools::session_info()
+```
+
+</details>
+
 ## Notes
 
 I believe the order of the previous scripts is as follows:
@@ -69,3 +82,12 @@ I believe the order of the previous scripts is as follows:
 3. "IATBR18analysis.Rmd"
 4. "TRB2019_Regression_etc.Rmd"
 
+
+### List of files built that idk if I need (check whether we read them in later scripts)
+
+From `"01_extract-chts-slosb-activity..."`
+* `slo_sb_hhids.rds`
+
+
+## Testing internal links
+![](figs/example_seqiplot.png)

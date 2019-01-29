@@ -5,21 +5,25 @@ sequence-fragmentation-project
 
 GeoTrans project looking at fragmentation using sequence analysis
 
-Introduction to this project
-----------------------------
+Overview
+--------
 
-[Integrating git and Github into an R project](https://happygitwithr.com/)
+The primary goal of this project is to investigate the effects of activity and travel fragmentation on behavior. The current focus of the project is to reorganize and update the previous data analysis scripts. This will allow for future use of this workflow in larger-scale implementation of the analysis.
 
-Principles I will be using can be found in the article [Project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
+### Useful links:
 
-My goals for this reorganization of the project are for it to...
+-   [Integrating git and Github into an R project](https://happygitwithr.com/)
+-   Restructuring principles I will be using can be found in the article [project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
 
--   Flow well
--   Have an organizational scheme
+### Restructuring of scripts
+
+We want the project workflow to:
+
+-   Have a clear organizational scheme
 -   Have each script be one piece (break down the workflow into small pieces that are each in their own script)
 -   Bring over all necessary pieces from the old scripts to the new ones.
 
-TIPS FOR MYSELF (directly from that article ["project-oriented workflow".](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/) )
+TIPS FOR MYSELF (directly from the article [project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/) )
 
 1.  Isolate code that creates an object that takes a long time to create in its own script.
 2.  Write the object to file as `.rds`
@@ -41,6 +45,102 @@ Project structure (folders, etc)
 
 Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I need to learn what the best way to deal with data in projects is.
 
+<details>
+
+<summary>Session info</summary>
+
+``` r
+devtools::session_info()
+#> - Session info ----------------------------------------------------------
+#>  setting  value                       
+#>  version  R version 3.5.1 (2018-07-02)
+#>  os       Windows 10 x64              
+#>  system   i386, mingw32               
+#>  ui       RTerm                       
+#>  language (EN)                        
+#>  collate  English_United States.1252  
+#>  ctype    English_United States.1252  
+#>  tz       America/Los_Angeles         
+#>  date     2019-01-29                  
+#> 
+#> - Packages --------------------------------------------------------------
+#>  package     * version date       lib source        
+#>  assertthat    0.2.0   2017-04-11 [1] CRAN (R 3.5.0)
+#>  backports     1.1.2   2017-12-13 [1] CRAN (R 3.5.0)
+#>  bindr         0.1.1   2018-03-13 [1] CRAN (R 3.5.0)
+#>  bindrcpp      0.2.2   2018-03-29 [1] CRAN (R 3.5.0)
+#>  broom         0.4.5   2018-07-03 [1] CRAN (R 3.5.1)
+#>  callr         2.0.4   2018-05-15 [1] CRAN (R 3.5.0)
+#>  cellranger    1.1.0   2016-07-27 [1] CRAN (R 3.5.0)
+#>  cli           1.0.0   2017-11-05 [1] CRAN (R 3.5.0)
+#>  colorspace    1.3-2   2016-12-14 [1] CRAN (R 3.5.0)
+#>  crayon        1.3.4   2017-09-16 [1] CRAN (R 3.5.0)
+#>  desc          1.2.0   2018-05-01 [1] CRAN (R 3.5.2)
+#>  devtools      2.0.1   2018-10-26 [1] CRAN (R 3.5.2)
+#>  digest        0.6.15  2018-01-28 [1] CRAN (R 3.5.0)
+#>  dplyr       * 0.7.6   2018-06-29 [1] CRAN (R 3.5.1)
+#>  evaluate      0.10.1  2017-06-24 [1] CRAN (R 3.5.0)
+#>  forcats     * 0.3.0   2018-02-19 [1] CRAN (R 3.5.0)
+#>  foreign       0.8-70  2017-11-28 [2] CRAN (R 3.5.1)
+#>  fs            1.2.6   2018-08-23 [1] CRAN (R 3.5.2)
+#>  ggplot2     * 3.0.0   2018-07-03 [1] CRAN (R 3.5.1)
+#>  glue          1.2.0   2017-10-29 [1] CRAN (R 3.5.0)
+#>  gtable        0.2.0   2016-02-26 [1] CRAN (R 3.5.0)
+#>  haven         1.1.2   2018-06-27 [1] CRAN (R 3.5.1)
+#>  hms           0.4.2   2018-03-10 [1] CRAN (R 3.5.0)
+#>  htmltools     0.3.6   2017-04-28 [1] CRAN (R 3.5.0)
+#>  httr          1.3.1   2017-08-20 [1] CRAN (R 3.5.0)
+#>  jsonlite      1.5     2017-06-01 [1] CRAN (R 3.5.0)
+#>  knitr         1.20    2018-02-20 [1] CRAN (R 3.5.0)
+#>  lattice       0.20-35 2017-03-25 [2] CRAN (R 3.5.1)
+#>  lazyeval      0.2.1   2017-10-29 [1] CRAN (R 3.5.0)
+#>  lubridate     1.7.4   2018-04-11 [1] CRAN (R 3.5.0)
+#>  magrittr      1.5     2014-11-22 [1] CRAN (R 3.5.0)
+#>  memoise       1.1.0   2017-04-21 [1] CRAN (R 3.5.2)
+#>  mnormt        1.5-5   2016-10-15 [1] CRAN (R 3.5.0)
+#>  modelr        0.1.2   2018-05-11 [1] CRAN (R 3.5.0)
+#>  munsell       0.5.0   2018-06-12 [1] CRAN (R 3.5.0)
+#>  nlme          3.1-137 2018-04-07 [2] CRAN (R 3.5.1)
+#>  pillar        1.2.3   2018-05-25 [1] CRAN (R 3.5.0)
+#>  pkgbuild      1.0.2   2018-10-16 [1] CRAN (R 3.5.2)
+#>  pkgconfig     2.0.1   2017-03-21 [1] CRAN (R 3.5.0)
+#>  pkgload       1.0.2   2018-10-29 [1] CRAN (R 3.5.2)
+#>  plyr          1.8.4   2016-06-08 [1] CRAN (R 3.5.0)
+#>  prettyunits   1.0.2   2015-07-13 [1] CRAN (R 3.5.2)
+#>  processx      3.1.0   2018-05-15 [1] CRAN (R 3.5.0)
+#>  psych         1.8.4   2018-05-06 [1] CRAN (R 3.5.0)
+#>  purrr       * 0.2.5   2018-05-29 [1] CRAN (R 3.5.0)
+#>  R6            2.2.2   2017-06-17 [1] CRAN (R 3.5.0)
+#>  Rcpp          0.12.17 2018-05-18 [1] CRAN (R 3.5.0)
+#>  readr       * 1.1.1   2017-05-16 [1] CRAN (R 3.5.0)
+#>  readxl        1.1.0   2018-04-20 [1] CRAN (R 3.5.0)
+#>  remotes       2.0.2   2018-10-30 [1] CRAN (R 3.5.2)
+#>  reshape2      1.4.3   2017-12-11 [1] CRAN (R 3.5.0)
+#>  rlang         0.2.1   2018-05-30 [1] CRAN (R 3.5.0)
+#>  rmarkdown     1.10    2018-06-11 [1] CRAN (R 3.5.0)
+#>  rprojroot     1.3-2   2018-01-03 [1] CRAN (R 3.5.0)
+#>  rstudioapi    0.7     2017-09-07 [1] CRAN (R 3.5.0)
+#>  rvest         0.3.2   2016-06-17 [1] CRAN (R 3.5.0)
+#>  scales        0.5.0   2017-08-24 [1] CRAN (R 3.5.0)
+#>  sessioninfo   1.1.1   2018-11-05 [1] CRAN (R 3.5.2)
+#>  stringi       1.1.7   2018-03-12 [1] CRAN (R 3.5.0)
+#>  stringr     * 1.3.1   2018-05-10 [1] CRAN (R 3.5.0)
+#>  testthat      2.0.0   2017-12-13 [1] CRAN (R 3.5.1)
+#>  tibble      * 1.4.2   2018-01-22 [1] CRAN (R 3.5.0)
+#>  tidyr       * 0.8.1   2018-05-18 [1] CRAN (R 3.5.0)
+#>  tidyselect    0.2.4   2018-02-26 [1] CRAN (R 3.5.0)
+#>  tidyverse   * 1.2.1   2017-11-14 [1] CRAN (R 3.5.1)
+#>  usethis       1.4.0   2018-08-14 [1] CRAN (R 3.5.2)
+#>  withr         2.1.2   2018-03-15 [1] CRAN (R 3.5.0)
+#>  xml2          1.2.0   2018-01-24 [1] CRAN (R 3.5.0)
+#>  yaml          2.1.19  2018-05-01 [1] CRAN (R 3.5.0)
+#> 
+#> [1] C:/Users/mcbri/Documents/R/win-library/3.5
+#> [2] C:/Program Files/R/R-3.5.1/library
+```
+
+</details>
+
 Notes
 -----
 
@@ -50,3 +150,12 @@ I believe the order of the previous scripts is as follows:
 2.  "FirstTraMineR\_Exploration.Rmd"
 3.  "IATBR18analysis.Rmd"
 4.  "TRB2019\_Regression\_etc.Rmd"
+
+### List of files built that idk if I need (check whether we read them in later scripts)
+
+From `"01_extract-chts-slosb-activity..."` \* `slo_sb_hhids.rds`
+
+Testing internal links
+----------------------
+
+![](figs/example_seqiplot.png)
