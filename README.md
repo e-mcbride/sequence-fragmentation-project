@@ -1,10 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-sequence-fragmentation-project
-==============================
-
-GeoTrans project looking at fragmentation using sequence analysis
-
 Overview
 --------
 
