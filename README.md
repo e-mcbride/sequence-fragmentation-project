@@ -69,7 +69,7 @@ Run [R/95\_make-all.R](R/95_make-all.R) to re-run the analysis and re-render thi
 <td><a href="data/chts-hhids_slo-sb.rds" class="uri">data/chts-hhids_slo-sb.rds</a><br><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
 </tr>
 <tr class="even">
-<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
+<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a><br>[slo_sb_place2segid.rds]</td>
 <td></td>
 <td></td>
 </tr>
@@ -184,9 +184,19 @@ I believe the order of the previous scripts is as follows:
 
 ### List of files built that idk if I need (check whether we read them in later scripts)
 
-From `"01_extract-chts-slosb-activity..."` \* `slo_sb_hhids.rds`
+From `"01_extract-chts-slosb-activity..."`
 
-Testing internal links
-----------------------
+-   `slo_sb_hhids.rds`
+
+### Testing internal links
 
 ![](figs/example_seqiplot.png)
+
+#### Place type
+
+| place\_type |  Total Place-Events|  People with this place type|
+|:------------|-------------------:|----------------------------:|
+| Home        |                6039|                         2800|
+| Other       |                5446|                         2006|
+| School      |                 257|                          233|
+| Work        |                 867|                          683|

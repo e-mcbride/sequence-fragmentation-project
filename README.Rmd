@@ -71,7 +71,7 @@ Run [R/95_make-all.R](R/95_make-all.R) to re-run the analysis and re-render this
 | Input                            | Script                                  | Output                                     |
 |----------------------------------|-----------------------------------------|--------------------------------------------|
 |                                  | [R/01_extract-all-chts-tables_slo-sb.R](R/01_extract-all-chts-tables_slo-sb.R) | [data/chts-hhids_slo-sb.rds](data/chts-hhids_slo-sb.rds)<br>[data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) |
-| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) |       |                                            |
+| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds)<br>[slo_sb_place2segid.rds] |       |                                            |
 
 
 <details>
@@ -96,10 +96,21 @@ I believe the order of the previous scripts is as follows:
 ### List of files built that idk if I need (check whether we read them in later scripts)
 
 From `"01_extract-chts-slosb-activity..."`
+
 * `slo_sb_hhids.rds`
 
 
 
 
-## Testing internal links
+### Testing internal links
 ![](figs/example_seqiplot.png)
+
+#### Place type
+```{r, include = FALSE}
+pltype_frq <- readr::read_csv(here::here("figs","place-type-freq-table-HOSW.csv"))
+```
+
+```{r, echo = FALSE}
+pltype_frq %>% 
+  knitr::kable()
+```
