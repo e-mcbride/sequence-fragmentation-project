@@ -1,5 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+A project examining activity and travel fragmentation in California. This line is a test to see if it fixes the issue I was having.
+
 Overview
 ========
 
