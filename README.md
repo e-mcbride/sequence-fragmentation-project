@@ -45,6 +45,37 @@ Project structure (folders, etc)
 
 Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I need to learn what the best way to deal with data in projects is.
 
+### Flow of the Analysis
+
+Run [R/95\_make-all.R](R/95_make-all.R) to re-run the analysis and re-render this README.
+
+<table>
+<colgroup>
+<col width="28%" />
+<col width="34%" />
+<col width="36%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Script</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td><a href="R/01_extract-all-chts-tables_slo-sb.R" class="uri">R/01_extract-all-chts-tables_slo-sb.R</a></td>
+<td><a href="data/chts-hhids_slo-sb.rds" class="uri">data/chts-hhids_slo-sb.rds</a><br><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
+</tr>
+<tr class="even">
+<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 <details>
 
 <summary>Session info</summary>

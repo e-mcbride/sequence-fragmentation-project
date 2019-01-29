@@ -64,6 +64,16 @@ Eventual goals:
 Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I need to learn what the best way to deal with data in projects is.
 
 
+### Flow of the Analysis
+
+Run [R/95_make-all.R](R/95_make-all.R) to re-run the analysis and re-render this README.
+
+| Input                            | Script                                  | Output                                     |
+|----------------------------------|-----------------------------------------|--------------------------------------------|
+|                                  | [R/01_extract-all-chts-tables_slo-sb.R](R/01_extract-all-chts-tables_slo-sb.R) | [data/chts-hhids_slo-sb.rds](data/chts-hhids_slo-sb.rds)<br>[data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) |
+| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) |       |                                            |
+
+
 <details>
 
 <summary>Session info</summary>
@@ -87,6 +97,8 @@ I believe the order of the previous scripts is as follows:
 
 From `"01_extract-chts-slosb-activity..."`
 * `slo_sb_hhids.rds`
+
+
 
 
 ## Testing internal links
