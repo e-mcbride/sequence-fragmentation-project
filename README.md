@@ -1,16 +1,18 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Overview
---------
+========
 
 The primary goal of this project is to investigate the effects of activity and travel fragmentation on behavior. The current focus of the project is to reorganize and update the previous data analysis scripts. This will allow for future use of this workflow in larger-scale implementation of the analysis.
 
-### Useful links:
+Useful links:
+-------------
 
 -   [Integrating git and Github into an R project](https://happygitwithr.com/)
 -   Restructuring principles I will be using can be found in the article [project-oriented workflow.](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
 
-### Restructuring of scripts
+Restructuring of scripts
+------------------------
 
 We want the project workflow to:
 
@@ -31,7 +33,7 @@ Eventual goals:
 -   Bring Adam's scripts that built the objects I am using into the project.
 
 Project structure (folders, etc)
---------------------------------
+================================
 
 -   `/R` contains scripts
 -   `/figs` contains any figures built
@@ -40,7 +42,8 @@ Project structure (folders, etc)
 
 Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I need to learn what the best way to deal with data in projects is.
 
-### Flow of the Analysis
+Flow of the Analysis
+--------------------
 
 Run [R/95\_make-all.R](R/95_make-all.R) to re-run the analysis and re-render this README.
 
@@ -168,7 +171,7 @@ devtools::session_info()
 </details>
 
 Notes
------
+=====
 
 I believe the order of the previous scripts is as follows:
 
@@ -177,17 +180,19 @@ I believe the order of the previous scripts is as follows:
 3.  "IATBR18analysis.Rmd"
 4.  "TRB2019\_Regression\_etc.Rmd"
 
-### List of files built that idk if I need (check whether we read them in later scripts)
+List of files built that idk if I need (check whether we read them in later scripts)
+------------------------------------------------------------------------------------
 
 From `"01_extract-chts-slosb-activity..."`
 
 -   `slo_sb_hhids.rds`
 
-### Testing internal links
+Testing internal links
+----------------------
 
 ![](figs/example_seqiplot.png)
 
-#### Place type
+### Place type
 
 | place\_type |  Total Place-Events|  People with this place type|
 |:------------|-------------------:|----------------------------:|
