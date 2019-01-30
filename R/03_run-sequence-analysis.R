@@ -10,8 +10,8 @@ slosb.sts <- seqformat(data = places_mod, var = c("pid", "arr_time3_add1", "dep_
 
 
 slosb.seq240 <- seqdef(data = places_mod,
-                       var = c("pid", "arr_time3_add1", "dep_time3_add1", "place_type"),
-                       id="pid", begin="arr_time3_add1", end="dep_time3_add1", status="place_type", 
+                       var = c("pid", "arr_time3_add1", "dep_time3_add1", "pltype"),
+                       id="pid", begin="arr_time3_add1", end="dep_time3_add1", status="pltype", 
                        from="SPELL", to="STS",
                        process = FALSE, 
                        xtstep = 240)
