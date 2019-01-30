@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-A project examining activity and travel fragmentation in California. This is a commit test from RStudio. Testing commit from master branch for me.
+A project examining activity and travel fragmentation in California.
 
 Overview
 ========
