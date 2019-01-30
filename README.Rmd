@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 ```
 
-A project examining activity and travel fragmentation in California.
+A project examining activity and travel fragmentation in California. This is a commit test from RStudio.
 
 # Overview
 

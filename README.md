@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-A project examining activity and travel fragmentation in California.
+A project examining activity and travel fragmentation in California. This is a commit test from RStudio.
 
 Overview
 ========
