@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 ```
 
+A project examining activity and travel fragmentation in California.
 
 # Overview
 
