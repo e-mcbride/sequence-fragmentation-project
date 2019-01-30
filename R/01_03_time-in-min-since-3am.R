@@ -34,7 +34,7 @@ locations_timevars <- chts_rel$PLACE %>%
          trip_duration    = TRIPDUR) %>%
   select(SAMPN,PERNO,PLANO, arrival_time_3, departure_time_3, place_duration)
 
-locations_timevars %>% readr::write_rds(here("data", "locations-time-vars.rds"))
+locations_timevars %>% readr::write_rds(here("data", "locations-time-vars_places.rds"))
 
 activities_with_time <- chts_rel$ACTIVITY %>%
   left_join(locations_timevars, by=c('SAMPN','PERNO','PLANO')) %>%

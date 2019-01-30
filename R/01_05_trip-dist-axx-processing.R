@@ -62,4 +62,4 @@ accessibilities <- readr::read_rds('slo_sb_segidAccess_pow10km.rds')
 trip_dist_axx <- trip_seg_lengths %>% left_join(accessibilities, by=c('cur_seg_id'='seg_id'))
  
 
-readr::write_rds(here("data", "trip-dist-axx.rds"))
+trip_dist_axx %>% readr::write_rds(here("data", "trip-dist-axx_places.rds"))

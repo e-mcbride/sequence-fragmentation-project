@@ -14,6 +14,7 @@ library(tidyverse); library(here)
 
 activities_crosswalk <- readxl::read_excel(here("data", "activity_purps_crosswalk.xlsx")) %>% 
   select(APURP,Act_Cat)
+activities_with_time <- readr::read_rds(here("data", "activities-time-vars.rds"))
 
 chts_acts_classed <- activities_with_time %>% left_join(activities_crosswalk, by='APURP')
 
@@ -52,4 +53,7 @@ locations_activity %>%
          pct_multitasking = 100*multitasking_TRUE/Places) %>% 
   select(activity_type,Places, pct_multitasking) %>% arrange(desc(Places))
 
-locations_activity %>% readr::write_rds(here("data", "locations-activity-vars.rds"))
+locations_activity %>% readr::write_rds(here("data", "locations-activity-vars_places.rds"))
+
+
+

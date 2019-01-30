@@ -97,7 +97,7 @@ locations_place_cat <- locations_rel_matched %>%
   ungroup() %>%
   select(SAMPN,PERNO,PLANO,place_type,any_work:any_other)
 
-locations_place_cat %>% write_rds(here("data", "locations-place-cat.rds"))
+locations_place_cat %>% write_rds(here("data", "locations-place-cat_places.rds"))
 
 
 
