@@ -51,9 +51,9 @@ Run [R/95\_make-all.R](R/95_make-all.R) to re-run the analysis and re-render thi
 
 <table>
 <colgroup>
-<col width="28%" />
-<col width="34%" />
-<col width="36%" />
+<col width="24%" />
+<col width="37%" />
+<col width="38%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -65,13 +65,38 @@ Run [R/95\_make-all.R](R/95_make-all.R) to re-run the analysis and re-render thi
 <tbody>
 <tr class="odd">
 <td></td>
-<td><a href="R/01_extract-all-chts-tables_slo-sb.R" class="uri">R/01_extract-all-chts-tables_slo-sb.R</a></td>
+<td><a href="R/01_01_extract-all-chts-tables_slo-sb.R" class="uri">R/01_01_extract-all-chts-tables_slo-sb.R</a></td>
 <td><a href="data/chts-hhids_slo-sb.rds" class="uri">data/chts-hhids_slo-sb.rds</a><br><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
 </tr>
 <tr class="even">
-<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a><br>[slo_sb_place2segid.rds]</td>
-<td></td>
-<td></td>
+<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a><br><a href="data/slo_sb_place2segid.rds" class="uri">data/slo_sb_place2segid.rds</a></td>
+<td><a href="R/01_02_classify-places-HWSO.R" class="uri">R/01_02_classify-places-HWSO.R</a></td>
+<td><a href="figs/place-type-freq-table-HOSW.csv" class="uri">figs/place-type-freq-table-HOSW.csv</a><br><a href="data/locations-place-cat_places.rds" class="uri">data/locations-place-cat_places.rds</a></td>
+</tr>
+<tr class="odd">
+<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
+<td><a href="R/01_03_time-in-min-since-3am.R" class="uri">R/01_03_time-in-min-since-3am.R</a></td>
+<td><a href="data/locations-time-vars_places.rds" class="uri">data/locations-time-vars_places.rds</a><br><a href="data/activities-time-vars.rds" class="uri">data/activities-time-vars.rds</a></td>
+</tr>
+<tr class="even">
+<td><a href="data/activity_purps_crosswalk.xlsx" class="uri">data/activity_purps_crosswalk.xlsx</a></td>
+<td><a href="R/01_04_activity-var-processing.R" class="uri">R/01_04_activity-var-processing.R</a></td>
+<td><a href="data/locations-activity-vars_places.rds" class="uri">data/locations-activity-vars_places.rds</a></td>
+</tr>
+<tr class="odd">
+<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a><br><a href="data/slo_sb_place2segid.rds" class="uri">data/slo_sb_place2segid.rds</a><br><a href="data/slo_sb_dists4travel.rds" class="uri">data/slo_sb_dists4travel.rds</a><br><a href="data/slo_sb_segidAccess_pow10km.rds" class="uri">data/slo_sb_segidAccess_pow10km.rds</a></td>
+<td><a href="R/01_05_trip-dist-axx-processing.R" class="uri">R/01_05_trip-dist-axx-processing.R</a></td>
+<td><a href="data/trip-dist-axx_places.rds" class="uri">data/trip-dist-axx_places.rds</a></td>
+</tr>
+<tr class="even">
+<td><a href="data/chts-all-tables_slo-sb.rds" class="uri">data/chts-all-tables_slo-sb.rds</a></td>
+<td><a href="R/01_06_pr-hh-pl-vars.R" class="uri">R/01_06_pr-hh-pl-vars.R</a></td>
+<td><a href="data/pr-hh-pl-vars_places.rds" class="uri">data/pr-hh-pl-vars_places.rds</a></td>
+</tr>
+<tr class="odd">
+<td><a href="data/locations-place-cat_places.rds" class="uri">data/locations-place-cat_places.rds</a><br><a href="data/locations-time-vars_places.rds" class="uri">data/locations-time-vars_places.rds</a><br><a href="data/locations-activity-vars_places.rds" class="uri">data/locations-activity-vars_places.rds</a><br><a href="data/trip-dist-axx_places.rds" class="uri">data/trip-dist-axx_places.rds</a><br><a href="data/pr-vars_places.rds" class="uri">data/pr-vars_places.rds</a><br><a href="data/hh-vars_places.rds" class="uri">data/hh-vars_places.rds</a><br><a href="data/pl-vars_places.rds" class="uri">data/pl-vars_places.rds</a></td>
+<td><a href="R/01_95_make-place-file.R" class="uri">R/01_95_make-place-file.R</a></td>
+<td><a href="data/places_slo_sb.rds" class="uri">data/places_slo_sb.rds</a><br><a href="data/places_slo_sb.csv" class="uri">data/places_slo_sb.csv</a></td>
 </tr>
 </tbody>
 </table>
@@ -92,7 +117,7 @@ devtools::session_info()
 #>  collate  English_United States.1252  
 #>  ctype    English_United States.1252  
 #>  tz       America/Los_Angeles         
-#>  date     2019-01-29                  
+#>  date     2019-01-30                  
 #> 
 #> - Packages --------------------------------------------------------------
 #>  package     * version date       lib source        

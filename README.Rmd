@@ -65,10 +65,18 @@ Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I
 
 Run [R/95_make-all.R](R/95_make-all.R) to re-run the analysis and re-render this README.
 
-| Input                            | Script                                  | Output                                     |
-|----------------------------------|-----------------------------------------|--------------------------------------------|
-|                                  | [R/01_extract-all-chts-tables_slo-sb.R](R/01_extract-all-chts-tables_slo-sb.R) | [data/chts-hhids_slo-sb.rds](data/chts-hhids_slo-sb.rds)<br>[data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) |
-| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds)<br>[slo_sb_place2segid.rds] |       |                                            |
+
+| Input | Script | Output |
+|-------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  | [R/01_01_extract-all-chts-tables_slo-sb.R](R/01_01_extract-all-chts-tables_slo-sb.R) | [data/chts-hhids_slo-sb.rds](data/chts-hhids_slo-sb.rds)<br>[data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) |
+| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds)<br>[data/slo_sb_place2segid.rds](data/slo_sb_place2segid.rds) | [R/01_02_classify-places-HWSO.R](R/01_02_classify-places-HWSO.R) | [figs/place-type-freq-table-HOSW.csv](figs/place-type-freq-table-HOSW.csv)<br>[data/locations-place-cat_places.rds](data/locations-place-cat_places.rds) |
+| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) | [R/01_03_time-in-min-since-3am.R](R/01_03_time-in-min-since-3am.R) | [data/locations-time-vars_places.rds](data/locations-time-vars_places.rds)<br>[data/activities-time-vars.rds](data/activities-time-vars.rds) |
+| [data/activity_purps_crosswalk.xlsx](data/activity_purps_crosswalk.xlsx) | [R/01_04_activity-var-processing.R](R/01_04_activity-var-processing.R) | [data/locations-activity-vars_places.rds](data/locations-activity-vars_places.rds) |
+| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds)<br>[data/slo_sb_place2segid.rds](data/slo_sb_place2segid.rds)<br>[data/slo_sb_dists4travel.rds](data/slo_sb_dists4travel.rds)<br>[data/slo_sb_segidAccess_pow10km.rds](data/slo_sb_segidAccess_pow10km.rds) | [R/01_05_trip-dist-axx-processing.R](R/01_05_trip-dist-axx-processing.R) | [data/trip-dist-axx_places.rds](data/trip-dist-axx_places.rds) |
+| [data/chts-all-tables_slo-sb.rds](data/chts-all-tables_slo-sb.rds) | [R/01_06_pr-hh-pl-vars.R](R/01_06_pr-hh-pl-vars.R) | [data/pr-hh-pl-vars_places.rds](data/pr-hh-pl-vars_places.rds) |
+| [data/locations-place-cat_places.rds](data/locations-place-cat_places.rds)<br>[data/locations-time-vars_places.rds](data/locations-time-vars_places.rds)<br>[data/locations-activity-vars_places.rds](data/locations-activity-vars_places.rds)<br>[data/trip-dist-axx_places.rds](data/trip-dist-axx_places.rds)<br>[data/pr-vars_places.rds](data/pr-vars_places.rds)<br>[data/hh-vars_places.rds](data/hh-vars_places.rds)<br>[data/pl-vars_places.rds](data/pl-vars_places.rds) | [R/01_95_make-place-file.R](R/01_95_make-place-file.R) | [data/places_slo_sb.rds](data/places_slo_sb.rds)<br>[data/places_slo_sb.csv](data/places_slo_sb.csv) |
+
+
 
 
 <details>
