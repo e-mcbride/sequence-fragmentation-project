@@ -1,20 +1,8 @@
 library(tidyverse)
 library(dbscan)
 
-estabs_data <- read_rds('data/nets_locs_retent.rds')
+#estabs_data <- read_rds('data/nets_locs_retent.rds')
 
-
-# function that takes point idseps, minPts and provides a data frame with cols
-# point_id, eps, minPts, cluster, point coordinates
-# this plays nicely with map_dfr
-dbscan_to_df = function(x_ids, x_locs, eps, minPts, keep_xs = F) {
-  db_obj = dbscan(x_locs, eps, minPts)
-  dbdf = data_frame(pointid = x_ids,
-                    eps = eps, 
-                    minPts = minPts, 
-                    clust = db_obj$cluster)
-  if (keep_xs) bind_cols(dbdf, x_locs) else dbdf
-}
 
 # mostly just a wrapper around dbscan::dbscan ... gets used inside dbscan_tuning but also easy to use inside mutate
 # main difference: can set "noise" points outside of clusters to NA or leave as 0
@@ -32,14 +20,18 @@ dbscan_clust <- function(coords, eps, minPts = 5, borderPoints = FALSE, .non_clu
 make_dbscan_df <- function(eps, minPts, coords, keepers,
                            borderPoints = FALSE, .non_clust_NA = TRUE) {
   
+  # running clust first really seems to matter for some reason
+  clust = dbscan_clust(coords = coords, eps = eps, minPts = minPts, 
+                       borderPoints = borderPoints, .non_clust_NA = .non_clust_NA)
+  
   keepers %>% 
     mutate(eps = eps,
            minPts = minPts,
-           clust = dbscan_clust(coords = coords, eps = eps, minPts = minPts, 
-                                    borderPoints = borderPoints, .non_clust_NA = .non_clust_NA))
+           clust = clust)
   
 }
 
+# t1 <- make_dbscan_df(200, 5, select(estabs_data, X, Y), select(estabs_data, place_id)) %>% summarise(mean(!is.na(clust)))
 
 # provide eps as vector of neighbor-distance in meters (200ish works well in most of CA, probably vary eps for experiments)
 # provide minPts as (vector of) minimum number of neighbors for cluster status (5 is min by rule of thumb and works well for CA)
@@ -71,13 +63,14 @@ dbscan_tuning <- function(data, eps, minPts=5,
   params <- expand.grid(eps, minPts)
   
   # run dbscan for all params, output result as single tibble
-  pmap_dfr(params, make_dbscan_df, 
-           coords = coords, keepers = keepers,
-           borderPoints = borderPoints, .non_clust_NA = .non_clust_NA, .drop_coords = .drop_coords)
+  pmap_dfr(params, 
+           ~ make_dbscan_df(..1, ..2, 
+                            coords = coords, keepers = keepers,
+                            borderPoints = borderPoints, .non_clust_NA = .non_clust_NA))
   
 }
 
-#dbscan_to_df_m(estabs_data, 200, 5)
-
+# t2 <- dbscan_tuning(estabs_data, eps=c(100,150,200), minPts = 5, id_col = place_id, x_col = X, y_col = Y) %>% group_by(eps) %>% summarize(mean(!is.na(clust)))
+# t3 <- dbscan_tuning(estabs_data, eps=c(100,150,200), minPts = 5, id_col = place_id, x_col = X, y_col = Y, borderPoints = T) %>% group_by(eps) %>% summarize(mean(!is.na(clust)))
 
 
