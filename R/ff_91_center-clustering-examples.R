@@ -18,7 +18,7 @@ estabs_data_cl <- estabs_data %>%
 
 
 # save clustered data for use with match_nearest fxns
-estabs_data_cl %>% 
+nets_clust_ex <- estabs_data_cl %>% 
   select(DunsNumber, NAICS2, place_id, X, Y, clust) %>% 
   filter(!is.na(clust)) %>% 
   write_rds('data/nets_locs_retent_clust.rds')
@@ -41,3 +41,37 @@ db_tuning_results_summary %>%
                      labels=function(p) scales::percent(p,accuracy=1)) + 
   ggtitle('Cluster Tuning Results and Number of Clusters')
 
+
+# Examples for nearest neighbor and adding clust to other datasets ####
+source('R/ff_02_match-nearest-functions.R')
+
+# generate comparison points ... randomly offset ~ 0-50 m in either direction from a subset of other points
+# these should all be in same cluster as original point
+samp_points <- nets_clust_ex %>% 
+  sample_n(10000) %>%
+  transmute(newid = paste0('r_', 10000+row_number()),
+            orig_clust = clust,
+            X = X + runif(n(), -50, 50),
+            Y = Y + runif(n(), -50, 50))
+
+# run nearest neighbor comp
+samp_points_with_nn <- samp_points %>% 
+  bind_cols(nearest_neighbor(select(nets_clust_ex, X, Y), select(., X, Y)))
+
+samp_points_with_clust <- samp_points %>% 
+  mutate(clust  = nearest_cluster(., nets_clust_ex, X, Y, clust, eps=200))
+
+samp_points_with_clust %>% count(clust == orig_clust) 
+
+# generate comparison points ... randomly offset ~ 0-1000 m in either direction from a subset of other points
+# some of these will be in no cluster, some will be in same, some will be in different
+samp_points_km <- nets_clust_ex %>% 
+  sample_n(10000) %>%
+  transmute(newid = paste0('r_', 10000+row_number()),
+            orig_clust = clust,
+            X = X + runif(n(), -1000, 1000),
+            Y = Y + runif(n(), -1000, 1000))
+
+samp_points_with_clust_km <- samp_points_km %>% 
+  mutate(clust  = nearest_cluster(., nets_clust_ex, X, Y, clust, eps=200))
+samp_points_with_clust_km %>% count(clust == orig_clust) 
