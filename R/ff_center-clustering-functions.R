@@ -5,7 +5,11 @@ library(dbscan)
 
 
 # mostly just a wrapper around dbscan::dbscan ... gets used inside dbscan_tuning but also easy to use inside mutate
-# main difference: can set "noise" points outside of clusters to NA or leave as 0
+# main difference from default: can set "noise" points outside of clusters to NA or leave as 0
+# coords: data frame or matrix of coordinates, probably 2-columns, one row per point you want to cluster
+# eps: neighbor-distance in meters (200ish works well in most of CA, probably vary eps for experiments)
+# minPts: minimum number of neighbors for cluster status (5 is min by rule of thumb and works well for CA)
+# borderPoints: should non-dense points be added to a cluster within eps (will assign randomly if a point borders multiple clusters)
 dbscan_clust <- function(coords, eps, minPts = 5, borderPoints = FALSE, .non_clust_NA = TRUE) {
   
   clust_results <- dbscan::dbscan(x = coords, eps = eps, minPts = minPts, borderPoints = borderPoints) %>% pluck('cluster')
