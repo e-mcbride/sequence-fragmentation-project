@@ -16,6 +16,13 @@ estabs_data_cl <- estabs_data %>%
   mutate(clust = dbscan_clust(select(., X, Y), 
                               eps = 200, minPts = 5))
 
+
+# save clustered data for use with match_nearest fxns
+estabs_data_cl %>% 
+  select(DunsNumber, NAICS2, place_id, X, Y, clust) %>% 
+  filter(!is.na(clust)) %>% 
+  write_rds('data/nets_locs_retent_clust.rds')
+
 # test a range of eps (neighbor distances)
 db_tuning_results <- dbscan_tuning(estabs_data, eps=seq(50,400, 50), minPts = 5, 
                                    id_col = place_id, x_col = X, y_col = Y) 
