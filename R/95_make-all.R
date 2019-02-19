@@ -24,6 +24,9 @@ source(here("R/01_06_pr-hh-pl-vars.R"))
 # WARNING: ONLY RUN THE FOLLOWING AFTER YOU HAVE FIXED 04 AND 05
 # source(here("R/01_95_make-place-file.R")) 
 
+source(here("R/02_modify-place-file.R"))
+source(here("R/03_run-sequence-analysis.R"))
+
 #####
 rmarkdown::render(here("README.Rmd"))
 ## I'm not really sure why this is being created, tbh
