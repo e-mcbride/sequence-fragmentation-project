@@ -24,7 +24,7 @@ min2TOD = function(dayminutes) {
 
 time <- min2TOD(seq(0,1399))
 
-
+# Running sequence analysis:
 pl.seq <- travel_dat %>% data.frame() %>% 
   seqdef(var = c("pid", "arr_time3_add1", "dep_time3_add1", "pltype"),
          informat = "SPELL", labels = pl.labels, process = FALSE, cnames = time, xtstep= 180)
