@@ -5,8 +5,8 @@ library(TraMineR); library(tidyverse); library(here)
 places_dat <- read_rds(here("data","places_slo_sb.rds"))
 
 ### Recoding variables: Make personID variable, change starting times to 1 instead of 0 by adding one minute to everything, simpler place_types names, AND saving it as a data.frame so traminer can use it
-#' I did this because traminer requires the sequence data to have no values <1 
-#' 
+#' I did this because traminer requires the sequence data to have no values <1
+#' # Also Making the overall id variable, a shortened placetype variable, and recoding the already-included travel as "loop" and "transfer"
 
 # places_mod <- places_dat %>% 
 #   #mutate(pid = as.numeric(str_c(SAMPN, PERNO))) %>% 
