@@ -62,25 +62,13 @@ TravRows <- function(x) {
 # running function above to add the new set of rows that contain the travel
 trav_added <- pl_nest %>% mutate(trav = map(data, TravRows))
 
-# Below, we will join the new travel rows with the original rows. 
-# We will do so by making two tables from it - one from travel rows and one from the original rows
 
-## pull the travel rows and make into a tibble:
+## unnest to make into a tibble:
 travel_dat <- trav_added %>% 
   unnest(trav) %>% 
   arrange(pid, dep_time3_add1)
 
-# Pull the original set of rows, make into a tibble:
-origdat <- trav_added %>% unnest(data) #%>% mutate(PLANO = as.character(PLANO))
+travel_dat %>% readr::write_rds(here("data", "places_travel-added.rds"))
 
 
-final_dat <- origdat %>% bind_rows(travel_dat) %>% arrange(pid, dep_time3_add1)
 
-
-pl.labels <- seqstatl(final_dat$place_type)
-
-pl.seq <- final_dat %>% data.frame() %>% 
-  seqdef(var = c("pid", "arr_time3_add1", "dep_time3_add1", "pltype"),
-         informat = "SPELL", labels = pl.labels, process = FALSE, cnames = time, xtstep= 180)
-
-#write_rds(pl.seq, "OutputData/place_sequence.rds")
