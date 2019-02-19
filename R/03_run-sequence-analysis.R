@@ -12,10 +12,20 @@ slosb.sts <- seqformat(data = places_mod, var = c("pid", "arr_time3_add1", "dep_
 slosb.seq240 <- seqdef(data = places_mod,
                        var = c("pid", "arr_time3_add1", "dep_time3_add1", "pltype"),
                        id="pid", begin="arr_time3_add1", end="dep_time3_add1", status="pltype", 
-                       from="SPELL", to="STS",
-                       process = FALSE, 
-                       xtstep = 240)
-                       #labels = slosb.labels)#,covar = c("activity_type", "GEND", "AGE","HHSIZ","HHWRK", "HHVEH", "RESTY", "INCOM"))#,informat = "SPELL", , 
+                       informat = "SPELL",
+                       #from="SPELL", to="STS",
+                       process = FALSE,
+                       xtstep = 240,
+                       labels = slosb.labels)#,covar = c("activity_type", "GEND", "AGE","HHSIZ","HHWRK", "HHVEH", "RESTY", "INCOM"))#,informat = "SPELL", , 
 
+#####
+
+slosb.seq240 <- seqdef(data = slosb.sts,
+                       process = FALSE,
+                       xtstep = 240,
+                       labels = slosb.labels,
+                       covar = c("activity_type", "GEND", "AGE","HHSIZ","HHWRK", "HHVEH", "RESTY", "INCOM"))
+
+##### 
 slosb.seq240 %>% write_rds(here("data","slosb_seq240.rds"))
 
