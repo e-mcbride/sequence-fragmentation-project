@@ -41,7 +41,7 @@ incomevals <- pl.grpvars %>%
 ##' Added $3,960 to this number for each additional person in hh.
 ##' Below are calculations of these thresholds.
 
-pov_tbl <- seq(1:8) %>% as_tibble() %>% 
+pov_tbl <- seq(1:12) %>% as_tibble() %>% 
   rename(HHSIZ=value) %>% 
   mutate(npr_extra = HHSIZ-1,
          extrainc = npr_extra * 3960,
@@ -89,6 +89,74 @@ grpvars <- pl.grpvars %>%
          AGE = as.numeric(AGE),
          Und16 = AGE < 16
   ) 
+#####
+# making edits to incom calcs
+#####
+hh <- chts$HOUSEHOLD
+
+inc.test <- hh %>% 
+  select(SAMPN, HHSIZ, HHWRK, INCOM) %>% 
+  left_join(incomevals, by = "INCOM") %>% 
+  mutate(inc_hi_pr = inc_hi/HHSIZ,
+         inc_lo_pr = inc_lo/HHSIZ) %>%
+  left_join(pov_tbl, by = "HHSIZ") %>%
+  mutate(inc_lo_thresh = inc_lo_pr - povinc_pr,
+         inc_hi_thresh = inc_hi_pr - povinc_pr)
+
+inc.test$inc_hi_thresh %>% 
+  hist()
+  #quantile(na.rm = TRUE)
+
+aa <- inc.test %>% 
+  #filter((!inc_lo_thresh<=0))
+  filter((inc_hi_thresh<=0)) %>%
+  filter(inc_lo_thresh<0 & inc_hi_thresh<1000) #INCOM == "$25,000 to $34,999" & HHSIZ > 5))
+
+
+  
+zz <- inc.test %>% 
+  mutate(pov_lvl =
+           
+           case_when(
+             # low
+                ((inc_hi_thresh<=0) |
+                (INCOM == "$25,000 to $34,999" & HHSIZ > 5)) ~ "low",
+             #medium
+             ((INCOM == "$10,000 to $24,999" & HHSIZ <= 2) |
+                (INCOM == "$25,000 to $34,999" & HHSIZ <= 5) |
+                (inc_lo >= 35000 & inc_lo < 50000)) ~ "low-med",
+             #medium-high
+             (inc_lo >=50000 & inc_lo < 100000) ~ "med-high",
+             
+             # high
+             (inc_lo >= 100000 ~ "high")),
+         
+         # as ordered factor
+         pov_lvl = ordered(pov_lvl, levels = c(NA, "low", "low-med", "med-high", "high")),
+         
+         # Do Child dummy (under 16)
+         
+         AGE = as.numeric(AGE),
+         Und16 = AGE < 16
+  ))
+
+
+bb <- inc.test %>% filter((INCOM == "$0 to $9,999" | 
+          (INCOM == "$10,000 to $24,999" & HHSIZ > 2) | 
+          (INCOM == "$25,000 to $34,999" & HHSIZ > 5)))
+
+(INCOM == "$0 to $9,999" | 
+    (INCOM == "$10,000 to $24,999" & HHSIZ > 2) | 
+    (INCOM == "$25,000 to $34,999" & HHSIZ > 5)) ~ "low",
+#medium
+((INCOM == "$10,000 to $24,999" & HHSIZ <= 2) | 
+   (INCOM == "$25,000 to $34,999" & HHSIZ <= 5) | 
+   (inc_lo >= 35000 & inc_lo < 50000)) ~ "low-med",
+#medium-high
+(inc_lo >=50000 & inc_lo < 100000) ~ "med-high",
+
+# high
+(inc_lo >= 100000 ~ "high"))
 
 write_rds(grpvars, here("data", "grouping-variables.rds"))
 
