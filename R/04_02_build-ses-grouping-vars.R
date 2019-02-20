@@ -18,26 +18,46 @@ pl.grpvars <- places %>%
   #mutate(gendnoRF = if_else(GEND == "RF", "FEMALE", GEND)) %>%
   left_join(chts_sel, by = "pid")
 
-incomevals <- pl.grpvars %>% select(INCOM) %>% unique() %>% 
+
+#####
+# Income variables
+#####
+
+# first: building numeric versions of income values
+incomevals <- pl.grpvars %>% 
+  select(INCOM) %>% 
+  unique() %>% 
   mutate(renameinc = str_remove_all(INCOM,c("\\$|\\,| or more"))) %>%
   #split
-  tidyr::separate(col = renameinc, into = c("lobound", "hibound"), sep = " to ", remove = F) %>%
-  mutate(inc_hi = as.numeric(hibound),
-         inc_lo = as.numeric(lobound)) %>%
+  tidyr::separate(col = renameinc, into = c("inc_lo", "inc_hi"), sep = " to ", remove = TRUE) %>%
+  mutate(inc_lo = as.numeric(inc_lo),
+         inc_hi = as.numeric(inc_hi)) %>%
   arrange(inc_lo)
 
+# NEXT: using the US poverty lines for 2012 to determine poverty levels
+#
+##' the poverty line is not one number. It takes household size into account.
+##' In 2012 the poverty line had a baseline of $11,170 for a hh of 1 person. 
+##' Added $3,960 to this number for each additional person in hh.
+##' Below are calculations of these thresholds.
 
-npr_extra <- c(1,2,3,4,5,6,7,8)-1
-extrainc <- npr_extra * 3960
-povlines <- extrainc + 11170
-npr <- seq(1:8)
-inc_pr <- povlines/npr
+pov_tbl <- seq(1:8) %>% as_tibble() %>% 
+  rename(HHSIZ=value) %>% 
+  mutate(npr_extra = HHSIZ-1,
+         extrainc = npr_extra * 3960,
+         povlines = extrainc + 11170, 
+         povinc_pr = povlines/HHSIZ) # see notes above for basis of these calculations
 
-pov_tbl <- bind_cols(HHSIZ = npr, povlines = povlines, povinc_pr = inc_pr)
-rm(npr_extra, extrainc, povlines, npr, inc_pr)
+
+# NEXT: joining the income calculations to the other grouping variables
+#' below we get the amount of money available per person in the household 
+#' we then join the table with the poverty levels per person to the table
+#' we subtract the min/max income ranges from the poverty level for that hh size
+#' If we see a negative value for at least `inc_lo_thresh`, this gives us a rough idea of whether they are close to the poverty line. 
+#' If both are negative, they are clearly below it. These numbers
 
 grpvars <- pl.grpvars %>% 
-  left_join((incomevals %>% select(INCOM, inc_hi, inc_lo)), by = "INCOM") %>% 
+  left_join(incomevals, by = "INCOM") %>% 
   mutate(inc_hi_pr = inc_hi/HHSIZ,
          inc_lo_pr = inc_lo/HHSIZ) %>%
   left_join(pov_tbl, by = "HHSIZ") %>%
