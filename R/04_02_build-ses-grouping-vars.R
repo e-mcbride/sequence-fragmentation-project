@@ -1,25 +1,24 @@
-# 04_02 Building socio economic status grouping variables
+# 04_02 Building socioeconomic status grouping variables
 
 library(tidyverse); library(TraMineR); library(here)
 
-pl.en_tu <- read_rds(here("data","ent-tur_place-seq.rds"))
 
-chts <- read_rds(here("data","original","CHTS_all2018-03-05_.rds")) 
-chts_pr <- chts %>% select(PERSON)
-%>% 
-  mutate(pid = as.numeric(str_c(SAMPN, PERNO)))
+chts <- read_rds(here("data","original","CHTS_all2018-03-05_.rds"))
+places <- read_rds(here("data","modified_pldat.rds"))
 
-chts_sel = chts_pr %>% select(pid, HISP, RACE, NTVTY, DISAB, DTYPE, GEND, AGE)
+# pulling variables of interest from person data that were not already joined to the place data
+chts_sel <- chts$PERSON %>%
+  mutate(pid = as.numeric(str_c(SAMPN, PERNO))) %>%
+  select(pid, HISP, RACE, NTVTY, DISAB, DTYPE, GEND, AGE)
 
 
-pl.grpvars = places %>% 
-  #select(c("pid", "SAMPN", "PERNO", "GEND", "AGE","HHSIZ","HHWRK", "HHVEH", "RESTY", "INCOM")) %>%
-  select(c(pid, SAMPN, PERNO,HHSIZ,HHWRK, HHVEH, RESTY, INCOM)) %>%
+pl.grpvars <- places %>% 
+  select(pid, SAMPN, PERNO, HHSIZ, HHWRK, HHVEH, RESTY, INCOM) %>%
   distinct() %>%
   #mutate(gendnoRF = if_else(GEND == "RF", "FEMALE", GEND)) %>%
   left_join(chts_sel, by = "pid")
 
-incomevals = pl.grpvars %>% select(INCOM) %>% unique() %>% 
+incomevals <- pl.grpvars %>% select(INCOM) %>% unique() %>% 
   mutate(renameinc = str_remove_all(INCOM,c("\\$|\\,| or more"))) %>%
   #split
   tidyr::separate(col = renameinc, into = c("lobound", "hibound"), sep = " to ", remove = F) %>%
@@ -28,13 +27,13 @@ incomevals = pl.grpvars %>% select(INCOM) %>% unique() %>%
   arrange(inc_lo)
 
 
-npr_extra = c(1,2,3,4,5,6,7,8)-1
-extrainc = npr_extra * 3960
-povlines = extrainc + 11170
-npr = seq(1:8)
-inc_pr = povlines/npr
+npr_extra <- c(1,2,3,4,5,6,7,8)-1
+extrainc <- npr_extra * 3960
+povlines <- extrainc + 11170
+npr <- seq(1:8)
+inc_pr <- povlines/npr
 
-pov_tbl = bind_cols(HHSIZ = npr, povlines = povlines, povinc_pr = inc_pr)
+pov_tbl <- bind_cols(HHSIZ = npr, povlines = povlines, povinc_pr = inc_pr)
 rm(npr_extra, extrainc, povlines, npr, inc_pr)
 
 grpvars <- pl.grpvars %>% 
