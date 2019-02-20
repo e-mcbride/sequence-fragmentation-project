@@ -41,11 +41,9 @@ incomevals <- pl.grpvars %>%
 ##' Added $3,960 to this number for each additional person in hh.
 ##' Below are calculations of these thresholds.
 
-<<<<<<< HEAD
+
 pov_tbl <- seq(1:12) %>% as_tibble() %>% 
-=======
-pov_tbl <- seq(1:8) %>% as_tibble() %>% 
->>>>>>> 66600e34e355d0464a7b524f191266c6c8bd63ec
+
   rename(HHSIZ=value) %>% 
   mutate(npr_extra = HHSIZ-1,
          extrainc = npr_extra * 3960,
