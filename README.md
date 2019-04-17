@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-A project examining activity and travel fragmentation in California.
+A project examining activity and travel fragmentation in Santa Barbara and SLO counties in California.
 
 Overview
 ========
@@ -44,7 +44,7 @@ Project structure (folders, etc)
 
 Undecided if I will be uploading the folders `/data` and `/results` to GitHub. I need to learn what the best way to deal with data in projects is.
 
-[Data can be found on UCSB Box](https://ucsb.app.box.com/folder/65485431730)
+[Data can be found on UCSB Box.](https://ucsb.app.box.com/folder/65485431730)
 
 Flow of the Analysis
 --------------------

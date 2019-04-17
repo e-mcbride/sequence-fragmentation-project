@@ -2,7 +2,7 @@
 
 library(fs); library(here); library(tidyverse)
 
-
+#' pull in all the place file pieces we just built (marked by ending in "_places.rds") and join them together
 locations_mainvars <- dir_ls(here("data"), glob = "*_places.rds") %>% 
   map(read_rds) %>% 
   reduce(left_join)
