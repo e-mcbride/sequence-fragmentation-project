@@ -40,10 +40,7 @@ place$MODE %>% unique
 #####
 # Fixing the messed up APURP variable with a crosswalk
 #####
-# chts <- read_rds(here("data", "original", "CHTS_all2018-03-05_.rds"))
-chts <- read_rds("data/chts_all_2019-05-22.rds")
 
-# activity <- chts$ACTIVITY
 activity <- chts$ACTIVITY
 ac <- activity %>% select(SAMPN, PERNO, PLANO, ACTNO, APURP) 
 
