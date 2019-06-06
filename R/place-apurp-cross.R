@@ -28,6 +28,7 @@ school_work_activities <- chts_rel$ACTIVITY %>%
             work_acts   = any(APURP == 'WORK/JOB DUTIES'))
 
 
+
 #' A couple helper functions to identify place names with at least one word (by default length >= 4 characters) in common.
 
 one_word_match <- function(string_col1, string_col2, len_min=4) {
@@ -120,7 +121,7 @@ locs_place_cat <- locs_rel_matched %>%
 #' Attaching place type to activity type
 #####
 activity <- chts_rel$ACTIVITY
-ac <- activity %>% select(SAMPN, PERNO, PLANO, ACTNO, APURP) 
+ac <- activity %>% select(source, SAMPN, PERNO, PLANO, ACTNO, APURP) 
 
 
 #get the new activity categories AND clean up category names
@@ -147,19 +148,43 @@ act.place %>%
   filter(place_type == "Other") %>%
   # group_by(APURP, place_type) %>% 
   group_by(APURP) %>% 
-  summarise(n=n()) %>% 
+  count %>% 
   # spread(place_type, n) %>% 
+  # arrange(desc(n)) %>%
   View()
   # clipr::write_clip()
-  # arrange(desc(n))
-
-# clipr::write_clip()
-
 
 #####
-#
+# What is still called Other?
+#####
+matching <- locs_rel_matched %>% select(SAMPN, PERNO, PLANO, LAT, LON, 
+                            Home_Lat, Home_Lon, school_lat, school_lon, work_lat, work_lon, 
+                            home_match_points, school_match_points, work_match_points,
+                            place_type, PNAME)
+
+matching %>% 
+  filter(place_type == "Other") %>% 
+  View()
+
+place <- chts_rel$PLACE
+
+pl.name <- place %>% select(SAMPN, PERNO, PLANO, PNAME, LAT, LON)
+
+act.pl.name <- act.place %>% left_join(pl.name)
+
+act.pl.name %>% 
+  filter(place_type == "Other") %>% 
+  # filter(str_detect(APURP, "SCHOOL")) %>% 
+  filter(str_detect(APURP, "IN SCHOOL/CLASSROOM/LABORATORY")) %>% 
+  # select(place_type, APURP, PNAME) %>% 
+  # group_by(APURP) %>%
+  # count() %>%
+  View()
+
 #####
 # convert activity rows to columns for Activity 1-3 Category/Purpose in each place
+#####
+ 
 # first, rename columns and convert to very long format (three rows per activity)
 chts_acts_indiv_long <- act.cat %>% 
   select(SAMPN:ACTNO, 
