@@ -1,3 +1,10 @@
+# this is a data exploration script. Should go into "/notebook" or equivalent
+
+#' this script does a few things:
+#' Most important right now: it looks at what activities are in "Other"(place x activity)
+#' this shows that there are locations catgorized as "other" that should be in other categories
+#' Now, a script will be made to identify this
+
 library(tidyverse); library(here)
 
 
@@ -82,7 +89,7 @@ pltype_frq <- locs_rel_matched %>% count(SAMPN,PERNO,place_type) %>%
 
 pltype_frq
 
-pltype_frq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
+# pltype_frq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
 
 #' for each person, did they go to school/work on the diary day?
 locs_place_cat <- locs_rel_matched %>% 
@@ -119,13 +126,15 @@ act.place <- act.cat %>% left_join(locs_place_cat, by = c("SAMPN", 'PERNO', 'PLA
 # place x activity
 #####
 
+#' what activities are done in place type other?
 act.place %>% 
   filter(place_type == "Other") %>%
   # group_by(APURP, place_type) %>% 
   group_by(APURP) %>% 
   summarise(n=n()) %>% 
   # spread(place_type, n) %>% 
-  clipr::write_clip()
+  View()
+  # clipr::write_clip()
   # arrange(desc(n))
 
 # clipr::write_clip()
@@ -163,14 +172,7 @@ locs_activity <- chts_acts_indiv_wide %>%
   select(SAMPN:PLANO, activity_type, ends_with('A1'), ends_with('A2'), ends_with('A3'))
 
 
-locs_activity %>% group_by(activity_type) %>% count %>% clipr::write_clip()
-
-
-#####
-place %>% 
-  group_by(MODE) %>% 
-  count %>% 
-  arrange(desc(n)) %>% 
+locs_activity %>% group_by(activity_type) %>% count %>% 
   View()
   # clipr::write_clip()
 
