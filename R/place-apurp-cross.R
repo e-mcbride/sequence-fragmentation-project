@@ -9,9 +9,11 @@ library(tidyverse); library(here)
 
 
 #####
-# Getting place type for all of CA
+# Getting place type for all of CA 
 #####
-chts_rel <- read_rds("data/original/CHTS_all2018-03-05_.rds")
+
+# chts_rel <- read_rds("data/original/CHTS_all2018-03-05_.rds")
+chts_rel <- read_rds("data/chts_all_2019-05-22.rds") # trying with new dataset
 # place <- chts_rel$PLACE
 
 home_locs <- chts_rel$HOUSEHOLD %>% select(SAMPN, Home_Lat=HLAT, Home_Lon=HLON)
@@ -71,7 +73,9 @@ locs_rel_matchpts <- locs_rel %>%
          work_match_acts    = work_acts * 2)
 
 
+
 #' Calculate total matches and choose place category.
+#' this basically says: "if either the place name or place location match as expected, then 
 
 locs_rel_matched <- locs_rel_matchpts %>%
   mutate(home_match_points   = home_match_loc + home_match_name,
@@ -83,6 +87,18 @@ locs_rel_matched <- locs_rel_matchpts %>%
                                 work_match_points >= 3 &
                                   work_match_points > school_match_points ~ 'Work',
                                 TRUE ~ 'Other'))
+
+locs_rel_matched %>% group_by(place_type) %>% count() %>% View()
+## Current best:
+# Home
+# 219141
+# Other
+# 230211
+# School
+# 11885
+# Work
+# 31084
+
 
 pltype_frq <- locs_rel_matched %>% count(SAMPN,PERNO,place_type) %>%
   group_by(place_type) %>% summarise(`Total Place-Events` = sum(n), `People with this place type` = n())
@@ -108,18 +124,18 @@ ac <- activity %>% select(SAMPN, PERNO, PLANO, ACTNO, APURP)
 
 
 #get the new activity categories AND clean up category names
-activities_crosswalk <- readxl::read_excel(here("data", "activity_purps_crosswalk_touppercase.xlsx"))
+# activities_crosswalk <- readxl::read_excel(here("data", "activity_purps_crosswalk_touppercase.xlsx"))
 # gather(key = "key", value = "old.apurp", -new.apurp, -Act_Cat) %>% 
 # select(-key)
 
 
 
-act.cat <- ac %>% 
-  left_join(activities_crosswalk, by = c("APURP" = "old.apurp")) %>% 
-  mutate(APURP = new.apurp) %>% select(-new.apurp)
+# act.cat <- ac %>% 
+#   left_join(activities_crosswalk, by = c("APURP" = "old.apurp")) %>% 
+#   mutate(APURP = new.apurp) %>% select(-new.apurp)
 
 
-act.place <- act.cat %>% left_join(locs_place_cat, by = c("SAMPN", 'PERNO', 'PLANO'))
+act.place <- ac %>% left_join(locs_place_cat, by = c("SAMPN", 'PERNO', 'PLANO'))
 
 
 #####
