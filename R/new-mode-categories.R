@@ -3,6 +3,17 @@
 #' car driving alone, car driving others, car passengers, transit/pool passengers, walk, other motorized, other nonmotorized
 
 # TOTTR is total people traveling on trip, tottr >1 is more than 1 person
+
+place <- chts_rel$PLACE
+
+place %>% 
+  # mutate(caps.mode = str_to_upper(MODE)) %>% 
+  group_by(MODE) %>% 
+  count %>% 
+  View()
+# clipr::write_clip()
+
+
 pl.mode <- place %>% 
   left_join(modes, by = c("MODE")) %>%
   mutate(mode.simple = 
