@@ -28,7 +28,6 @@ school_work_activities <- chts_rel$ACTIVITY %>%
             work_acts   = any(APURP == 'WORK/JOB DUTIES'))
 
 
-
 #' A couple helper functions to identify place names with at least one word (by default length >= 4 characters) in common.
 
 one_word_match <- function(string_col1, string_col2, len_min=4) {
@@ -72,7 +71,6 @@ locs_rel_matchpts <- locs_rel %>%
          work_match_name2   = one_word_match(PNAME, work_name) | one_word_match(PNAME, work_name2) |
            (PNAME == work_name) | (PNAME == work_name2),
          work_match_acts    = work_acts * 2)
-
 
 
 #' Calculate total matches and choose place category.
@@ -157,10 +155,12 @@ act.place %>%
 #####
 # What is still called Other?
 #####
-matching <- locs_rel_matched %>% select(SAMPN, PERNO, PLANO, LAT, LON, 
-                            Home_Lat, Home_Lon, school_lat, school_lon, work_lat, work_lon, 
-                            home_match_points, school_match_points, work_match_points,
-                            place_type, PNAME)
+matching <- locs_rel_matched %>% 
+  select(SAMPN, PERNO, PLANO,
+         # LAT, LON, Home_Lat, Home_Lon, school_lat, school_lon, work_lat, work_lon, 
+         home_match_loc, home_match_name, school_match_lat, school_match_lon, school_match_name1, school_match_name2, school_match_acts, work_match_lat, work_match_lon, work_match_name1, work_match_name2, work_match_acts,
+         home_match_points, school_match_points, work_match_points,
+         place_type, TRIPDUR, PNAME, school_name, work_name, work_name2)
 
 matching %>% 
   filter(place_type == "Other") %>% 
@@ -181,6 +181,32 @@ act.pl.name %>%
   # count() %>%
   View()
 
+# add the "matching" thing to it instead of place:
+act.match <- act.place %>% left_join(matching)
+act.match %>% 
+  filter(place_type == "Other") %>%
+  # filter(place_type == "Home") %>% 
+  # filter(str_detect(APURP, "IN SCHOOL/CLASSROOM/LABORATORY")) %>%
+  # filter(str_detect(APURP, "ALL OTHER WORK-RELATED ACTIVITIES AT MY WORK")) %>%
+  filter(str_detect(APURP, "ALL OTHER ACTIVITIES AT MY HOME")) %>%
+  # group_by(PNAME) %>% 
+  # count() %>% 
+  # filter(PNAME == "HOME") %>%
+  View
+
+
+
+##' FINDINGS ABOUT THE OTHER CATEGORY
+##' There are places where the name (WORK or SCHOOL) match, but the lat/lon don't
+######' Sometimes because they did not put a lat/lon at all for their work, sometimes because they do not have a job that is in one place at a time (like landscaping)
+##' There are places where the lat/lon match, but the place name is not WORK or SCHOOL
+##' There are misspellings between work name and pname
+##' There are people who put DK/RF when reporting work name, but then put it in PNAME
+##' Some people put their titles in work_name instead of location of work (work_name = "Respiratory therapist", PNAME = "specific hospital")
+
+#####
+# override with "at my work", "in school", "at school", "at work"
+#####
 #####
 # convert activity rows to columns for Activity 1-3 Category/Purpose in each place
 #####
