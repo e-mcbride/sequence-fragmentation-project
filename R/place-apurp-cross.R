@@ -64,7 +64,7 @@ locs_rel_matchpts <- locs_rel %>%
          school_match_lon   = abs(LON - school_lon) < lon_match,
          school_match_name1 = PNAME == 'SCHOOL',
          school_match_name2 = one_word_match(PNAME, school_name) | (PNAME == school_name),
-         school_match_acts  = school_acts * 2,
+         school_match_acts  = school_acts * 3,
          work_match_lat     = abs(LAT - work_lat) < lat_match,
          work_match_lon     = abs(LON - work_lon) < lon_match,
          work_match_name1   = PNAME == 'WORK',
@@ -77,7 +77,7 @@ locs_rel_matchpts <- locs_rel %>%
 #' this basically says: "if either the place name or place location match as expected, then 
 
 locs_rel_matched <- locs_rel_matchpts %>%
-  mutate(home_match_points   = home_match_loc + home_match_name,
+  mutate(home_match_points   = rowSums(select(., starts_with('home_match')), na.rm=T),
          school_match_points = rowSums(select(., starts_with('school_match')), na.rm=T),
          work_match_points   = rowSums(select(., starts_with('work_match')), na.rm=T),
          place_type = case_when(home_match_points >= 1 ~ 'Home',
@@ -87,130 +87,16 @@ locs_rel_matched <- locs_rel_matchpts %>%
                                   work_match_points > school_match_points ~ 'Work',
                                 TRUE ~ 'Other'))
 
-locs_rel_matched %>% group_by(place_type) %>% count() %>% View()
-## Current best:
-# Home
-# 219141
-# Other
-# 230211
-# School
-# 11885
-# Work
-# 31084
-
-
-pltype_frq <- locs_rel_matched %>% count(SAMPN,PERNO,place_type) %>%
-  group_by(place_type) %>% summarise(`Total Place-Events` = sum(n), `People with this place type` = n())
-
-pltype_frq
-
-# pltype_frq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
-
-#' for each person, did they go to school/work on the diary day?
-locs_place_cat <- locs_rel_matched %>% 
-  group_by(SAMPN,PLANO) %>%
-  mutate(any_work   = any(place_type == 'Work'),
-         any_school = any(place_type == 'School'),
-         any_other  = any(place_type == 'Other')) %>% 
-  ungroup() %>%
-  select(SAMPN,PERNO,PLANO,place_type,any_work:any_other)
-
-#####
-#' Attaching place type to activity type
-#####
-activity <- chts_rel$ACTIVITY
-ac <- activity %>% select(source, SAMPN, PERNO, PLANO, ACTNO, APURP) 
-
-
-#get the new activity categories AND clean up category names
-# activities_crosswalk <- readxl::read_excel(here("data", "activity_purps_crosswalk_touppercase.xlsx"))
-# gather(key = "key", value = "old.apurp", -new.apurp, -Act_Cat) %>% 
-# select(-key)
-
-
-
-# act.cat <- ac %>% 
-#   left_join(activities_crosswalk, by = c("APURP" = "old.apurp")) %>% 
-#   mutate(APURP = new.apurp) %>% select(-new.apurp)
-
-
-act.place <- ac %>% left_join(locs_place_cat, by = c("SAMPN", 'PERNO', 'PLANO'))
-
-
-#####
-# place x activity
-#####
-
-#' what activities are done in place type other?
-act.place %>% 
-  filter(place_type == "Other") %>%
-  # group_by(APURP, place_type) %>% 
-  group_by(APURP) %>% 
-  count %>% 
-  # spread(place_type, n) %>% 
-  # arrange(desc(n)) %>%
-  View()
-  # clipr::write_clip()
-
-#####
-# What is still called Other?
-#####
-matching <- locs_rel_matched %>% 
-  select(SAMPN, PERNO, PLANO,
-         # LAT, LON, Home_Lat, Home_Lon, school_lat, school_lon, work_lat, work_lon, 
-         home_match_loc, home_match_name, school_match_lat, school_match_lon, school_match_name1, school_match_name2, school_match_acts, work_match_lat, work_match_lon, work_match_name1, work_match_name2, work_match_acts,
-         home_match_points, school_match_points, work_match_points,
-         place_type, TRIPDUR, PNAME, school_name, work_name, work_name2)
-
-matching %>% 
-  filter(place_type == "Other") %>% 
-  View()
-
-place <- chts_rel$PLACE
-
-pl.name <- place %>% select(SAMPN, PERNO, PLANO, PNAME, LAT, LON)
-
-act.pl.name <- act.place %>% left_join(pl.name)
-
-act.pl.name %>% 
-  filter(place_type == "Other") %>% 
-  # filter(str_detect(APURP, "SCHOOL")) %>% 
-  filter(str_detect(APURP, "IN SCHOOL/CLASSROOM/LABORATORY")) %>% 
-  # select(place_type, APURP, PNAME) %>% 
-  # group_by(APURP) %>%
-  # count() %>%
-  View()
-
-# add the "matching" thing to it instead of place:
-act.match <- act.place %>% left_join(matching)
-act.match %>% 
-  filter(place_type == "Other") %>%
-  # filter(place_type == "Home") %>% 
-  # filter(str_detect(APURP, "IN SCHOOL/CLASSROOM/LABORATORY")) %>%
-  # filter(str_detect(APURP, "ALL OTHER WORK-RELATED ACTIVITIES AT MY WORK")) %>%
-  filter(str_detect(APURP, "ALL OTHER ACTIVITIES AT MY HOME")) %>%
-  # group_by(PNAME) %>% 
-  # count() %>% 
-  # filter(PNAME == "HOME") %>%
-  View
-
-
-
-##' FINDINGS ABOUT THE OTHER CATEGORY
-##' There are places where the name (WORK or SCHOOL) match, but the lat/lon don't
-######' Sometimes because they did not put a lat/lon at all for their work, sometimes because they do not have a job that is in one place at a time (like landscaping)
-##' There are places where the lat/lon match, but the place name is not WORK or SCHOOL
-##' There are misspellings between work name and pname
-##' There are people who put DK/RF when reporting work name, but then put it in PNAME
-##' Some people put their titles in work_name instead of location of work (work_name = "Respiratory therapist", PNAME = "specific hospital")
-
 #####
 # override with "at my work", "in school", "at school", "at work"
 #####
+
 #####
+# NOTE: THIS IS A DIFFERENT THING COMPLETELY
+# place x activity for multitasking:
 # convert activity rows to columns for Activity 1-3 Category/Purpose in each place
 #####
- 
+
 # first, rename columns and convert to very long format (three rows per activity)
 chts_acts_indiv_long <- act.cat %>% 
   select(SAMPN:ACTNO, 
