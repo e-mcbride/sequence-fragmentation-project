@@ -3,7 +3,7 @@
 library(tidyverse); library(TraMineR); library(here)
 
 
-chts <- read_rds(here("data","original","CHTS_all2018-03-05_.rds"))
+chts <- read_rds(here("data-raw","chts_all_2019-05-22.rds"))
 places <- read_rds(here("data","modified_pldat.rds"))
 
 # pulling variables of interest from person data that were not already joined to the place data
@@ -42,7 +42,7 @@ incomevals <- pl.grpvars %>%
 ##' Below are calculations of these thresholds.
 
 
-pov_tbl <- seq(1:12) %>% as_tibble() %>% 
+pov_tbl <- seq(1:12) %>% enframe(name = NULL) %>% 
 
   rename(HHSIZ=value) %>% 
   mutate(npr_extra = HHSIZ-1,
@@ -140,25 +140,25 @@ zz <- inc.test %>%
          
          AGE = as.numeric(AGE),
          Und16 = AGE < 16
-  ))
+         )
 
 
 bb <- inc.test %>% filter((INCOM == "$0 to $9,999" | 
           (INCOM == "$10,000 to $24,999" & HHSIZ > 2) | 
           (INCOM == "$25,000 to $34,999" & HHSIZ > 5)))
 
-(INCOM == "$0 to $9,999" | 
-    (INCOM == "$10,000 to $24,999" & HHSIZ > 2) | 
-    (INCOM == "$25,000 to $34,999" & HHSIZ > 5)) ~ "low",
-#medium
-((INCOM == "$10,000 to $24,999" & HHSIZ <= 2) | 
-   (INCOM == "$25,000 to $34,999" & HHSIZ <= 5) | 
-   (inc_lo >= 35000 & inc_lo < 50000)) ~ "low-med",
-#medium-high
-(inc_lo >=50000 & inc_lo < 100000) ~ "med-high",
-
-# high
-(inc_lo >= 100000 ~ "high"))
+# (INCOM == "$0 to $9,999" | 
+#     (INCOM == "$10,000 to $24,999" & HHSIZ > 2) | 
+#     (INCOM == "$25,000 to $34,999" & HHSIZ > 5)) ~ "low",
+# #medium
+# ((INCOM == "$10,000 to $24,999" & HHSIZ <= 2) | 
+#    (INCOM == "$25,000 to $34,999" & HHSIZ <= 5) | 
+#    (inc_lo >= 35000 & inc_lo < 50000)) ~ "low-med",
+# #medium-high
+# (inc_lo >=50000 & inc_lo < 100000) ~ "med-high",
+# 
+# # high
+# (inc_lo >= 100000 ~ "high"))
 
 write_rds(grpvars, here("data", "grouping-variables.rds"))
 
