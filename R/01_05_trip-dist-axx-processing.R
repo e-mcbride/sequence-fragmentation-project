@@ -1,6 +1,6 @@
 library(tidyverse); library(here)
 
-chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
+# chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
 
 # load table linking place number to road segment id
 place_seg_links <- read_rds(here("data", "slo_sb_place2segid.rds"))
