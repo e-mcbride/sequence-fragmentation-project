@@ -10,6 +10,6 @@ pl.en_tu <- data.frame(seqient(pl.seq, norm = F, with.missing = T), seqST(pl.seq
   separate(col = pid, into = c("SAMPN", "PERNO"),sep = -1, convert = T)%>% 
   mutate(pid = as.numeric(str_c(SAMPN, PERNO)))
 
-write_csv(pl.en_tu, here("data", "ent-tur_place-seq.csv"))
-write_rds(pl.en_tu, here("data","ent-tur_place-seq.rds"))
+write_csv(pl.en_tu, here("results", "ent-tur_place-seq.csv"))
+write_rds(pl.en_tu, here("results","ent-tur_place-seq.rds"))
 
