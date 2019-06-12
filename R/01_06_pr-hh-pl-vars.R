@@ -1,7 +1,7 @@
 # 01_06_pr-hh-pl-vars.R
 library(here); library(tidyverse)
 
-chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
+# chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
 
 ## Extract additional place-level fields
 
