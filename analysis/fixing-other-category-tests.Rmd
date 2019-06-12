@@ -189,6 +189,28 @@ act.pl.oth %>%
 ```
 
 
+```{r}
+act.pl.oth %>% mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
+  View
+```
+
+
+Findings so far:
+
+* there are some places that people caled "home" that have a different lat/lon than the declared home lat/lon
+* There are 
+
+=======
+
+## This is something else idk what
+I think it's looking at issues with activity durations?
+```{r}
+act.pl.oth %>% 
+  filter(ACTDUR == 1439) %>% 
+  # filter(APURP == "LOOP TRIP (FOR INTERVIEWER ONLY-NOT LISTED ON DIARY)") %>% 
+    View()
+```
+
 
 ```{r}
 act.pl.oth %>% mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
@@ -203,15 +225,7 @@ Findings so far:
 
 
 
-
-## This is something else idk what
-I think it's looking at issues with activity durations?
-```{r}
-act.pl.oth %>% 
-  filter(ACTDUR == 1439) %>% 
-  # filter(APURP == "LOOP TRIP (FOR INTERVIEWER ONLY-NOT LISTED ON DIARY)") %>% 
-    View()
-```
+### What are places that should be called "home" or "work" or "school" that are not being called that?
 
 
 
