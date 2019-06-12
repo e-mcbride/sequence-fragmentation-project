@@ -1,0 +1,13 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# FORNOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further
+
+# also need to investigate the NA's:
+
+# check for start/end time consistency
+
+# investigate to make sure all start at time 1, end at time 1439
+
