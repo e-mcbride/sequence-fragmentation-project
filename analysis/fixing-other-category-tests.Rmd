@@ -6,8 +6,7 @@ output: html_notebook
 The `place-apurp-cross.R` file was originally made to cross activity purpose and place to look at multitasking. However, it became the ground for fixing the issues within the place type. Once a final thin has been decided, these changes will be implemented into the script that is in the workflow called `01_02_classify-places-HWSO.R`
 
 ```{r}
-library(here)
-source(here("analysis","place-apurp-cross.R"))
+source("fixing-other-category.R")
 ```
 
 
@@ -199,8 +198,6 @@ Findings so far:
 
 * there are some places that people caled "home" that have a different lat/lon than the declared home lat/lon
 * There are 
-
-=======
 
 ## This is something else idk what
 I think it's looking at issues with activity durations?
