@@ -5,7 +5,7 @@ output: html_notebook
 
 The script `fixing-other-category.R` became the ground for fixing the issues within the place type. Once a final categorization has been decided, these changes will be implemented into the script that is in the data munging workflow called `01_02_classify-places-HWSO.R`
 
-```{r}
+```{r include=FALSE}
 source("fixing-other-category.R")
 ```
 
@@ -55,11 +55,7 @@ Other	      214169
 School	     12339			
 Work	       30480	
 
-5. weigting on work_acts
-Home	235333			
-Other	214169			
-School	12339			
-Work	30480	
+
 ```{r}
 #' Below: Number of places in each category and number of people with each of those place types
 
