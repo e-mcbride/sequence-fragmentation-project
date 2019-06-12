@@ -67,11 +67,11 @@ source(here("R/01_04_activity-var-processing.R"))
 # source(here("R/01_05_trip-dist-axx-processing.R")) # BROKEN TIL I GET FILES FROM ADAM
 source(here("R/01_06_pr-hh-pl-vars.R"))
 
-# WARNING: ONLY RUN THE FOLLOWING AFTER YOU HAVE FIXED 04 AND 05
-# source(here("R/01_95_make-place-file.R")) 
+# WARNING: ONLY RUN THE FOLLOWING AFTER YOU HAVE FIXED 04 AND 05: (trying it without 5)
+source(here("R/01_95_make-place-file.R"))
 
 source(here("R/02_modify-place-file.R"))
-source(here("R/03_run-sequence-analysis.R"))
+source(here("R/03_run-sequence-analysis.R")) #FLAGGED FOR POTENTIAL ISSUES CAUSED
 
 #####
 rmarkdown::render(here("README.Rmd"))
