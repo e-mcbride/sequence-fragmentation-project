@@ -24,9 +24,18 @@ school_work_locs <- chts_rel$PERSON %>%
 
 school_work_activities <- chts_rel$ACTIVITY %>%
   group_by(SAMPN, PERNO, PLANO) %>%
-  summarise(school_acts = any(APURP == 'IN SCHOOL/CLASSROOM/LABORATORY'),
-            work_acts   = any(APURP == 'WORK/JOB DUTIES'))
+  # summarise(school_acts = any(APURP == 'IN SCHOOL/CLASSROOM/LABORATORY'),
+  #           work_acts   = any(APURP == 'WORK/JOB DUTIES', str_detect(APURP, "AT WORK")))
+  summarise(school_acts = any(APURP == 'IN SCHOOL/CLASSROOM/LABORATORY',
+                           str_detect(APURP, "AT SCHOOL")),
+         work_acts   = any(APURP == 'WORK/JOB DUTIES', 
+                           str_detect(APURP, "AT WORK"), 
+                           str_detect(APURP, "AT MY WORK")))
 
+# school_work_activities$work_acts %>% as.numeric() %>% sum(na.rm = TRUE)
+# 1. 39837
+# 2. 40373
+# 3. 40763
 
 #' A couple helper functions to identify place names with at least one word (by default length >= 4 characters) in common.
 
