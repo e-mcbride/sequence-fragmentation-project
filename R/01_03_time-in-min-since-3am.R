@@ -25,7 +25,7 @@ nas_to_false <- function(log_col) if_else(is.na(log_col),F,log_col)
 
 ###' Run these functions on the Activities and Places tables:
 
-chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
+# chts_rel <- readr::read_rds(here("data", "chts-all-tables_selection.rds"))
 
 locations_timevars <- chts_rel$PLACE %>% 
   mutate(arrival_time_3   = convert_time_3A(ARR_HR * 60 + ARR_MIN),
