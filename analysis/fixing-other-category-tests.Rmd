@@ -7,7 +7,7 @@ The `place-apurp-cross.R` file was originally made to cross activity purpose and
 
 ```{r}
 library(here)
-source(here("R","place-apurp-cross.R"))
+source(here("analysis","place-apurp-cross.R"))
 ```
 
 
@@ -162,17 +162,47 @@ act.match %>%
 * Some people put their titles in work_name instead of location of work (work_name = "Respiratory therapist", PNAME = "specific hospital")
 
 
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
+# More exploring what's wrong with "Other" (i think)
+(must run after `place-apurp-cross.R`)
 ```{r}
-plot(cars)
+source(here("analysis","place-apurp-cross.R"))
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r}
+pl.small <- locs_rel_matched %>% 
+  select(SAMPN, PERNO, PLANO, LAT, LON, Home_Lat, Home_Lon, MODE, PNAME, place_type, ACTDUR, TRIPDUR)
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+act.pl.oth <- act.cat %>% 
+  left_join(pl.small, by = c("SAMPN", 'PERNO', 'PLANO'))%>% 
+  # filter(place_type == "Home")
+  filter(place_type == "Other")
+
+act.pl.oth %>% 
+  filter(APURP =="ALL OTHER ACTIVITIES AT MY HOME") %>% 
+  # filter(is.na(PNAME)) %>% 
+  mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
+  # summarise_at(vars(lat.dif, lon.dif), list(~max(., na.rm = TRUE), ~min(., na.rm = TRUE)))
+  View
+  # clipr::write_clip()
+```
+
+
+
+```{r}
+act.pl.oth %>% mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
+  View
+```
+
+
+Findings so far:
+
+* there are some places that people caled "home" that have a different lat/lon than the declared home lat/lon
+* There are 
+
+
+
+### What are places that should be called "home" or "work" or "school" that are not being called that?
+
+
