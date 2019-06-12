@@ -12,9 +12,9 @@ library(tidyverse); library(here)
 
 ###' To create this, we need to load the activity category aggregator / crosswalk table we created and join it to the activities dataset, then aggregate the activities to the level of places.
 
-activities_crosswalk <- readxl::read_excel(here("data", "activity_purps_crosswalk.xlsx")) %>% 
+activities_crosswalk <- readxl::read_excel(here("data-raw", "activity_purps_crosswalk.xlsx")) %>% 
   select(APURP,Act_Cat)
-activities_with_time <- readr::read_rds(here("data", "activities-time-vars.rds"))
+activities_with_time <- readr::read_rds(here("data", "activities-time-vars.rds")) %>% select(-Act_Cat)
 
 chts_acts_classed <- activities_with_time %>% left_join(activities_crosswalk, by='APURP')
 
