@@ -1,6 +1,6 @@
-library(tidyverse); library(TraMineR); library(here)
+library(tidyverse); library(here)
 
-places_mod <- readr::read_rds(here("data","modified_pldat.rds"))
+# places_mod <- readr::read_rds(here("data","modified_pldat.rds"))
 
 # Data into nested format (nested by person ID)
 pl_nest <- places_mod %>% 
