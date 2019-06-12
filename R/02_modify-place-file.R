@@ -1,8 +1,8 @@
 # 02_
 
-library(TraMineR); library(tidyverse); library(here)
+library(tidyverse); library(here)
 
-places_dat <- read_rds(here("data","places_slo_sb.rds"))
+places_dat <- read_rds(here("data","places_county-selection.rds"))
 
 ### Recoding variables: Make personID variable, change starting times to 1 instead of 0 by adding one minute to everything, simpler place_types names, AND saving it as a data.frame so traminer can use it
 #' I did this because traminer requires the sequence data to have no values <1
