@@ -71,7 +71,9 @@ source(here("R/01_06_pr-hh-pl-vars.R"))
 source(here("R/01_95_make-place-file.R"))
 
 source(here("R/02_modify-place-file.R"))
-source(here("R/03_run-sequence-analysis.R")) #FLAGGED FOR POTENTIAL ISSUES CAUSED
+source(here("R/03_01_adding-travel-rows.R")) # FLAGGED FOR POTENTIAL ISSUES CAUSED
+
+source(here("R","run-sequence-analysis.R")) 
 
 #####
 rmarkdown::render(here("README.Rmd"))
