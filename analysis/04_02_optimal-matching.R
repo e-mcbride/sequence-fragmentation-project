@@ -4,8 +4,8 @@ library(TraMineR)
 
 pl.seq <- read_rds(here("results","place_sequence.rds"))
 
-couts <- TraMineR::seqsubm(pl.seq, method = "TRATE")
-round(couts, 2)
+counts <- TraMineR::seqsubm(pl.seq, method = "TRATE")
+round(counts, 2)
 
 pl.om <- TraMineR::seqdist(pl.seq, method = "OM", indel = 3, sm = couts)
 
