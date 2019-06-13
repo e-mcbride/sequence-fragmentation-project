@@ -1,0 +1,27 @@
+---
+title: "Examining entropy, turbulence, and complexity for statewide analysis"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(TraMineR)
+
+pl.en_tu_com <- read_rds(here("results", "ent-tur-com_place-seq.rds"))
+```
+
+```{r echo=FALSE}
+hist(pl.en_tu_com$C, main = NULL, xlab = "C Function of Entropy")
+```
+
+```{r}
+hist(pl.en_tu_com$Turbulence, main = NULL, xlab = "Turbulence")
+```
+
+```{r}
+hist(pl.en_tu_com$Entropy, main = NULL, xlab = "Entropy")
+```
+
+
+
