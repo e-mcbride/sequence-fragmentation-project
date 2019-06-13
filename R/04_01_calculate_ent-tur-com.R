@@ -1,6 +1,6 @@
 # 04_01 Calculating entropy and turbulence
 library(tidyverse); library(TraMineR); library(here)
-pl.seq <- read_rds(here("data","place_sequence.rds"))
+pl.seq <- read_rds(here("results","place_sequence.rds"))
 
 ## Sequence Entropy and Turbulence 
 #' Combined, written to file, examined
