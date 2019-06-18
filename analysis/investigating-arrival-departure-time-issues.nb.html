@@ -1837,19 +1837,47 @@ The following object is masked from 㤼㸱package:tidyr㤼㸲:
 <p>All the people whose PLANO == 1, but arrival time is NOT NA are included in <code>pl_na</code>.</p>
 <p>HOWEVER, Many of their PLANO == 1 have an ARRTM = NA. (correct formatting). So who are those people and why did they get NA’s? I may need to move on to looking at the code itself for a bit.</p>
 </div>
-<div id="who-is-in-pl_na" class="section level2">
-<h2>WHO is in <code>pl_na</code></h2>
-<p>Here is what I have figured out:</p>
-<ul>
-<li>All the people whose PLANO == 1, but arrival time is NOT NA are included in <code>pl_na</code>.</li>
-</ul>
-</div>
 <div id="look-at-the-code-itself" class="section level2">
 <h2>Look at the code itself</h2>
 <div id="check-modified-place-file" class="section level3">
 <h3>check modified place file</h3>
 <p>Compare <code>arrival_time_3</code> to <code>arr_time3_add1</code> (and the same for departure time)</p>
 <p>Created in “02_modify-place-file.R”</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxfbW9kJENURklQICU+JSB1bmlxdWVcblxuYGBgIn0= -->
+<pre class="r"><code>pl_mod$CTFIP %&gt;% unique
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIlNPTEFOT1wiICAgICAgICAgIFwiU0FOIERJRUdPXCIgICAgICAgXCJNRVJDRURcIiAgICAgICAgICBcIlNBTlRBIEJBUkJBUkFcIiAgIFwiTE9TIEFOR0VMRVNcIiAgICBcbiBbNl0gXCJQTEFDRVJcIiAgICAgICAgICBcIlJJVkVSU0lERVwiICAgICAgIFwiU0FOIEZSQU5DSVNDT1wiICAgXCJTQU4gQkVSTkFSRElOT1wiICBcIlNBTlRBIENMQVJBXCIgICAgXG5bMTFdIFwiU0FDUkFNRU5UT1wiICAgICAgXCJPUkFOR0VcIiAgICAgICAgICBcIkxBS0VcIiAgICAgICAgICAgIFwiU1VUVEVSXCIgICAgICAgICAgXCJTQU4gTUFURU9cIiAgICAgIFxuWzE2XSBcIlRVTEFSRVwiICAgICAgICAgIFwiS0VSTlwiICAgICAgICAgICAgXCJGUkVTTk9cIiAgICAgICAgICBcIkNPTlRSQSBDT1NUQVwiICAgIFwiVkVOVFVSQVwiICAgICAgICBcblsyMV0gXCJBTEFNRURBXCIgICAgICAgICBcIk1BREVSQVwiICAgICAgICAgIFwiVEVIQU1BXCIgICAgICAgICAgXCJJTVBFUklBTFwiICAgICAgICBcIkVMIERPUkFET1wiICAgICAgXG5bMjZdIFwiSFVNQk9MRFRcIiAgICAgICAgXCJTVEFOSVNMQVVTXCIgICAgICBcIlNPTk9NQVwiICAgICAgICAgIFwiU0FOIEpPQVFVSU5cIiAgICAgXCJCVVRURVwiICAgICAgICAgIFxuWzMxXSBcIk1BUklOXCIgICAgICAgICAgIFwiQU1BRE9SXCIgICAgICAgICAgXCJTSEFTVEFcIiAgICAgICAgICBcIkFMUElORVwiICAgICAgICAgIFwiTUVORE9DSU5PXCIgICAgICBcblszNl0gXCJJTllPXCIgICAgICAgICAgICBcIlNBTlRBIENSVVpcIiAgICAgIFwiU0lTS0lZT1VcIiAgICAgICAgXCJNT05URVJFWVwiICAgICAgICBcIlNBTiBMVUlTIE9CSVNQT1wiXG5bNDFdIFwiU0lFUlJBXCIgICAgICAgICAgXCJZVUJBXCIgICAgICAgICAgICBcIk5FVkFEQVwiICAgICAgICAgIFwiVFVPTFVNTkVcIiAgICAgICAgXCJOQVBBXCIgICAgICAgICAgIFxuWzQ2XSBcIlNBTiBCRU5JVE9cIiAgICAgIFwiWU9MT1wiICAgICAgICAgICAgXCJNT05PXCIgICAgICAgICAgICBcIkNPTFVTQVwiICAgICAgICAgIFwiUExVTUFTXCIgICAgICAgICBcbls1MV0gXCJNT0RPQ1wiICAgICAgICAgICBcIkRFTCBOT1JURVwiICAgICAgIFwiVFJJTklUWVwiICAgICAgICAgXCJNQVJJUE9TQVwiICAgICAgICBcIktJTkdTXCIgICAgICAgICAgXG5bNTZdIFwiQ0FMQVZFUkFTXCIgICAgICAgXCJMQVNTRU5cIiAgICAgICAgICBcIkdMRU5OXCIgICAgICAgICAgIE5BICAgICAgICAgICAgICAgIFwiTG9zIEFuZ2VsZXNcIiAgICBcbls2MV0gXCJPcmFuZ2VcIiAgICAgICAgICBcIlNhbiBCZXJuYXJkaW5vXCIgIFwiUml2ZXJzaWRlXCIgICAgICAgXCJWZW50dXJhXCIgICAgICAgIFxuIn0= -->
+<pre><code> [1] &quot;SOLANO&quot;          &quot;SAN DIEGO&quot;       &quot;MERCED&quot;          &quot;SANTA BARBARA&quot;   &quot;LOS ANGELES&quot;    
+ [6] &quot;PLACER&quot;          &quot;RIVERSIDE&quot;       &quot;SAN FRANCISCO&quot;   &quot;SAN BERNARDINO&quot;  &quot;SANTA CLARA&quot;    
+[11] &quot;SACRAMENTO&quot;      &quot;ORANGE&quot;          &quot;LAKE&quot;            &quot;SUTTER&quot;          &quot;SAN MATEO&quot;      
+[16] &quot;TULARE&quot;          &quot;KERN&quot;            &quot;FRESNO&quot;          &quot;CONTRA COSTA&quot;    &quot;VENTURA&quot;        
+[21] &quot;ALAMEDA&quot;         &quot;MADERA&quot;          &quot;TEHAMA&quot;          &quot;IMPERIAL&quot;        &quot;EL DORADO&quot;      
+[26] &quot;HUMBOLDT&quot;        &quot;STANISLAUS&quot;      &quot;SONOMA&quot;          &quot;SAN JOAQUIN&quot;     &quot;BUTTE&quot;          
+[31] &quot;MARIN&quot;           &quot;AMADOR&quot;          &quot;SHASTA&quot;          &quot;ALPINE&quot;          &quot;MENDOCINO&quot;      
+[36] &quot;INYO&quot;            &quot;SANTA CRUZ&quot;      &quot;SISKIYOU&quot;        &quot;MONTEREY&quot;        &quot;SAN LUIS OBISPO&quot;
+[41] &quot;SIERRA&quot;          &quot;YUBA&quot;            &quot;NEVADA&quot;          &quot;TUOLUMNE&quot;        &quot;NAPA&quot;           
+[46] &quot;SAN BENITO&quot;      &quot;YOLO&quot;            &quot;MONO&quot;            &quot;COLUSA&quot;          &quot;PLUMAS&quot;         
+[51] &quot;MODOC&quot;           &quot;DEL NORTE&quot;       &quot;TRINITY&quot;         &quot;MARIPOSA&quot;        &quot;KINGS&quot;          
+[56] &quot;CALAVERAS&quot;       &quot;LASSEN&quot;          &quot;GLENN&quot;           NA                &quot;Los Angeles&quot;    
+[61] &quot;Orange&quot;          &quot;San Bernardino&quot;  &quot;Riverside&quot;       &quot;Ventura&quot;        </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="check-the-creation-of-arrival_time_3" class="section level3">
+<h3>Check the creation of arrival_time_3</h3>
+<p>Apparently, the arrival/departure times should NOT be NA’S. They should be 0’s. Going back to the creation of the arrival and departure times in this format. THis is in the script</p>
 </div>
 </div>
 </div>
@@ -1861,10 +1889,18 @@ The following object is masked from 㤼㸱package:tidyr㤼㸲:
 </div>
 <div id="nas-in-the-middle" class="section level1">
 <h1>NA’S in the middle?</h1>
+</div>
+<div id="who-is-in-pl_na" class="section level1">
+<h1>WHO is in <code>pl_na</code></h1>
+<p>Here is what I have figured out:</p>
+<ul>
+<li>All the people whose PLANO == 1, but arrival time is NOT NA are included in <code>pl_na</code>.</li>
+<li>Apparently, the arrival/departure times should NOT be NA’S. They should be 0’s.</li>
+</ul>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpGT1IgTk9XOiBJIHdpbGwgcnVuIGFuIGFuYWx5c2lzIGV4Y2x1ZGluZyB0aGVzZSBwZW9wbGUgYXMgYW4gZXhwZXJpbWVudCB0byBzZWUgaG93IGl0IGdvZXMuIFRPTU9SUk9XIEkgd2lsbCBpbnZlc3RpZ2F0ZSB3aG8gdGhleSBhcmUgZnVydGhlcg0KDQoNCg0KDQojIGFsc28gbmVlZCB0byBpbnZlc3RpZ2F0ZSB0aGUgTkEnczoNCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShoZXJlKQ0KYGBgDQoNCmBgYHtyfQ0KdHJhdmVsX2RhdCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwgInBsYWNlc190cmF2ZWwtYWRkZWQucmRzIikpDQpgYGANCg0KDQojIyBMb29rIGF0IHdobyBoYXMgdGhlIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcyBhcyBOQQ0KDQpFeHRyYWN0IHRoZSBwaWQncyB3aGVyZSBhbnkgdGltZSB2YWx1ZSBpcyBOQQ0KYGBge3J9DQpwaWRzX25hX2Fycl9kZXAgPC0gdHJhdmVsX2RhdCAlPiUgDQogIHNlbGVjdChwaWQsIGFycl90aW1lM19hZGQxLCBkZXBfdGltZTNfYWRkMSkgJT4lDQogIGdhdGhlcihrZXkgPSAia2V5IiwgdmFsdWUgPSAidmFsdWUiLCAtcGlkKSAlPiUgDQogIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSANCiAgLiRwaWQgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KDQoNClJlYWQgdGhlIHJhdyBDSFRTIGZpbGVzLCBleHRyYWN0IHBsYWNlIGZpbGUNCmBgYHtyfQ0KY2h0cyA8LSByZWFkX3JkcyhoZXJlKCJkYXRhLXJhdyIsICJjaHRzX2FsbF8yMDE5LTA1LTIyLnJkcyIpKQ0KcGxhY2UgPC0gY2h0cyRQTEFDRQ0KYGBgDQoNCkV4dHJhY3QgdGhlIHJvd3Mgd2l0aCBwaWRzIHRoYXQgaGF2ZSBOQSdzIGZvciB0aGVpciBhcnIvZGVwIHRpbWVzDQpgYGB7cn0NCmxpYnJhcnkobWFncml0dHIpDQpwbGFjZSAlPD4lIG11dGF0ZShwaWQgPSBzdHJfYyhTQU1QTiwgUEVSTk8sIHNlcCA9ICIiKSAlPiUgYXMubnVtZXJpYygpKQ0KDQpwbF9uYSA8LSBwbGFjZSAlPiUgZmlsdGVyKHBpZCAlaW4lIHBpZHNfbmFfYXJyX2RlcCkNCmBgYA0KDQoNCkJlbG93LCBjaGVja2luZyB0byBzZWUgd2hhdCBhcnJpdmFsL2RlcGFydHVyZSB0aW1lcyBleGlzdCBmb3IgUExBTk8gPT0gMSBpbiB3aG9sZSBzYW1wbGUsIGFuZCBjb21wYXJpbmcgdG8gYXJyL2RlcCB0aW1lcyBpbiBgcGxfbmFgDQoNCmBgYHtyfQ0KcGwxIDwtIHBsYWNlICU+JSBmaWx0ZXIoUExBTk8gPT0gMSkgJT4lIHNlbGVjdChwaWQsIFBMQU5PLCBBUlJfSFIsIEFSUl9NSU4sIEFSUlRNKQ0KDQpwbDEgJT4lDQogIGZpbHRlcighaXMubmEoQVJSVE0pKSAlPiUgDQogIC4kQVJSVE0gJT4lIA0KICAjIHVuaXF1ZSAlPiUgDQogIFZpZXcoKQ0KDQpwbF9uYSAlPiUgZmlsdGVyKFBMQU5PID09IDEpICU+JSANCiAgIyBzZWxlY3QocGlkLCBQTEFOTywgQVJSX0hSLCBBUlJfTUlOLCBBUlJUTSkgJT4lIA0KICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIA0KICAuJEFSUlRNICU+JSANCiAgIyB1bmlxdWUgJT4lIA0KICBWaWV3DQoNCmBgYA0KDQoNCkFsbCB0aGUgcGVvcGxlIHdob3NlIFBMQU5PID09IDEsIGJ1dCBhcnJpdmFsIHRpbWUgaXMgTk9UIE5BIGFyZSBpbmNsdWRlZCBpbiBgcGxfbmFgLg0KDQpIT1dFVkVSLCBNYW55IG9mIHRoZWlyIFBMQU5PID09IDEgaGF2ZSBhbiBBUlJUTSA9IE5BLiAoY29ycmVjdCBmb3JtYXR0aW5nKS4gU28gd2hvIGFyZSB0aG9zZSBwZW9wbGUgYW5kIHdoeSBkaWQgdGhleSBnZXQgTkEncz8gSSBtYXkgbmVlZCB0byBtb3ZlIG9uIHRvIGxvb2tpbmcgYXQgdGhlIGNvZGUgaXRzZWxmIGZvciBhIGJpdC4gDQoNCg0KIyMgV0hPIGlzIGluIGBwbF9uYWANCg0KSGVyZSBpcyB3aGF0IEkgaGF2ZSBmaWd1cmVkIG91dDoNCg0KKiBBbGwgdGhlIHBlb3BsZSB3aG9zZSBQTEFOTyA9PSAxLCBidXQgYXJyaXZhbCB0aW1lIGlzIE5PVCBOQSBhcmUgaW5jbHVkZWQgaW4gYHBsX25hYC4NCg0KDQoNCg0KIyMgTG9vayBhdCB0aGUgY29kZSBpdHNlbGYNCg0KIyMjIGNoZWNrIG1vZGlmaWVkIHBsYWNlIGZpbGUNCkNvbXBhcmUgYGFycml2YWxfdGltZV8zYCB0byBgYXJyX3RpbWUzX2FkZDFgIChhbmQgdGhlIHNhbWUgZm9yIGRlcGFydHVyZSB0aW1lKQ0KDQpDcmVhdGVkIGluICIwMl9tb2RpZnktcGxhY2UtZmlsZS5SIg0KDQoNCg0KIyBjaGVjayBmb3Igc3RhcnQvZW5kIHRpbWUgY29uc2lzdGVuY3kNCg0KIyBpbnZlc3RpZ2F0ZSB0byBtYWtlIHN1cmUgYWxsIHN0YXJ0IGF0IHRpbWUgMSwgZW5kIGF0IHRpbWUgMTQzOSB2cyAxNDQwDQoNCiMgTkEnUyBpbiB0aGUgbWlkZGxlPw0KDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpGT1IgTk9XOiBJIHdpbGwgcnVuIGFuIGFuYWx5c2lzIGV4Y2x1ZGluZyB0aGVzZSBwZW9wbGUgYXMgYW4gZXhwZXJpbWVudCB0byBzZWUgaG93IGl0IGdvZXMuIFRPTU9SUk9XIEkgd2lsbCBpbnZlc3RpZ2F0ZSB3aG8gdGhleSBhcmUgZnVydGhlcg0KDQoNCg0KDQojIGFsc28gbmVlZCB0byBpbnZlc3RpZ2F0ZSB0aGUgTkEnczoNCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShoZXJlKQ0KYGBgDQoNCmBgYHtyfQ0KdHJhdmVsX2RhdCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwgInBsYWNlc190cmF2ZWwtYWRkZWQucmRzIikpDQpgYGANCg0KDQojIyBMb29rIGF0IHdobyBoYXMgdGhlIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcyBhcyBOQQ0KDQpFeHRyYWN0IHRoZSBwaWQncyB3aGVyZSBhbnkgdGltZSB2YWx1ZSBpcyBOQQ0KYGBge3J9DQpwaWRzX25hX2Fycl9kZXAgPC0gdHJhdmVsX2RhdCAlPiUgDQogIHNlbGVjdChwaWQsIGFycl90aW1lM19hZGQxLCBkZXBfdGltZTNfYWRkMSkgJT4lDQogIGdhdGhlcihrZXkgPSAia2V5IiwgdmFsdWUgPSAidmFsdWUiLCAtcGlkKSAlPiUgDQogIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSANCiAgLiRwaWQgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KDQoNClJlYWQgdGhlIHJhdyBDSFRTIGZpbGVzLCBleHRyYWN0IHBsYWNlIGZpbGUNCmBgYHtyfQ0KY2h0cyA8LSByZWFkX3JkcyhoZXJlKCJkYXRhLXJhdyIsICJjaHRzX2FsbF8yMDE5LTA1LTIyLnJkcyIpKQ0KcGxhY2UgPC0gY2h0cyRQTEFDRQ0KYGBgDQoNCkV4dHJhY3QgdGhlIHJvd3Mgd2l0aCBwaWRzIHRoYXQgaGF2ZSBOQSdzIGZvciB0aGVpciBhcnIvZGVwIHRpbWVzDQpgYGB7cn0NCmxpYnJhcnkobWFncml0dHIpDQpwbGFjZSAlPD4lIG11dGF0ZShwaWQgPSBzdHJfYyhTQU1QTiwgUEVSTk8sIHNlcCA9ICIiKSAlPiUgYXMubnVtZXJpYygpKQ0KDQpwbF9uYSA8LSBwbGFjZSAlPiUgZmlsdGVyKHBpZCAlaW4lIHBpZHNfbmFfYXJyX2RlcCkNCmBgYA0KDQoNCkJlbG93LCBjaGVja2luZyB0byBzZWUgd2hhdCBhcnJpdmFsL2RlcGFydHVyZSB0aW1lcyBleGlzdCBmb3IgUExBTk8gPT0gMSBpbiB3aG9sZSBzYW1wbGUsIGFuZCBjb21wYXJpbmcgdG8gYXJyL2RlcCB0aW1lcyBpbiBgcGxfbmFgDQoNCmBgYHtyfQ0KcGwxIDwtIHBsYWNlICU+JSBmaWx0ZXIoUExBTk8gPT0gMSkgJT4lIHNlbGVjdChwaWQsIFBMQU5PLCBBUlJfSFIsIEFSUl9NSU4sIEFSUlRNKQ0KDQpwbDEgJT4lDQogIGZpbHRlcighaXMubmEoQVJSVE0pKSAlPiUgDQogIC4kQVJSVE0gJT4lIA0KICAjIHVuaXF1ZSAlPiUgDQogIFZpZXcoKQ0KDQpwbF9uYSAlPiUgZmlsdGVyKFBMQU5PID09IDEpICU+JSANCiAgIyBzZWxlY3QocGlkLCBQTEFOTywgQVJSX0hSLCBBUlJfTUlOLCBBUlJUTSkgJT4lIA0KICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIA0KICAuJEFSUlRNICU+JSANCiAgIyB1bmlxdWUgJT4lIA0KICBWaWV3DQoNCmBgYA0KDQoNCkFsbCB0aGUgcGVvcGxlIHdob3NlIFBMQU5PID09IDEsIGJ1dCBhcnJpdmFsIHRpbWUgaXMgTk9UIE5BIGFyZSBpbmNsdWRlZCBpbiBgcGxfbmFgLg0KDQpIT1dFVkVSLCBNYW55IG9mIHRoZWlyIFBMQU5PID09IDEgaGF2ZSBhbiBBUlJUTSA9IE5BLiAoY29ycmVjdCBmb3JtYXR0aW5nKS4gU28gd2hvIGFyZSB0aG9zZSBwZW9wbGUgYW5kIHdoeSBkaWQgdGhleSBnZXQgTkEncz8gSSBtYXkgbmVlZCB0byBtb3ZlIG9uIHRvIGxvb2tpbmcgYXQgdGhlIGNvZGUgaXRzZWxmIGZvciBhIGJpdC4gDQoNCg0KDQoNCg0KIyMgTG9vayBhdCB0aGUgY29kZSBpdHNlbGYNCg0KIyMjIGNoZWNrIG1vZGlmaWVkIHBsYWNlIGZpbGUNCkNvbXBhcmUgYGFycml2YWxfdGltZV8zYCB0byBgYXJyX3RpbWUzX2FkZDFgIChhbmQgdGhlIHNhbWUgZm9yIGRlcGFydHVyZSB0aW1lKQ0KDQpDcmVhdGVkIGluICIwMl9tb2RpZnktcGxhY2UtZmlsZS5SIg0KDQpgYGB7cn0NCnBsX21vZCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwibW9kaWZpZWRfcGxkYXQucmRzIikpDQpgYGANCg0KYGBge3J9DQpwbF93YXQgPC0gc2Jfc2xvICU+JSANCiAgc2VsZWN0KHBpZCwgUExBTk8sIGFycml2YWxfdGltZV8zLCBhcnJfdGltZTNfYWRkMSwgZGVwYXJ0dXJlX3RpbWVfMywgZGVwX3RpbWUzX2FkZDEpICU+JSANCiAgZmlsdGVyKGlzLm5hKGFycl90aW1lM19hZGQxKSkNCmBgYA0KDQpgYGB7cn0NCnNiX3NsbyA8LSBwbF9tb2QgJT4lIGZpbHRlcihDVEZJUCA9PSAiU0FOVEEgQkFSQkFSQSIgfCBDVEZJUCA9PSAiU0FOIExVSVMgT0JJU1BPIikNCg0KDQpwbF9tb2QkQ1RGSVAgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KIyMjIENoZWNrIHRoZSBjcmVhdGlvbiBvZiBhcnJpdmFsX3RpbWVfMw0KDQpBcHBhcmVudGx5LCB0aGUgYXJyaXZhbC9kZXBhcnR1cmUgdGltZXMgc2hvdWxkIE5PVCBiZSBOQSdTLiBUaGV5IHNob3VsZCBiZSAwJ3MuIEdvaW5nIGJhY2sgdG8gdGhlIGNyZWF0aW9uIG9mIHRoZSBhcnJpdmFsIGFuZCBkZXBhcnR1cmUgdGltZXMgaW4gdGhpcyBmb3JtYXQuIFRIaXMgaXMgaW4gdGhlIHNjcmlwdCANCg0KIyBjaGVjayBmb3Igc3RhcnQvZW5kIHRpbWUgY29uc2lzdGVuY3kNCg0KIyBpbnZlc3RpZ2F0ZSB0byBtYWtlIHN1cmUgYWxsIHN0YXJ0IGF0IHRpbWUgMSwgZW5kIGF0IHRpbWUgMTQzOSB2cyAxNDQwDQoNCiMgTkEnUyBpbiB0aGUgbWlkZGxlPw0KDQoNCg0KDQojIFdITyBpcyBpbiBgcGxfbmFgDQoNCkhlcmUgaXMgd2hhdCBJIGhhdmUgZmlndXJlZCBvdXQ6DQoNCiogQWxsIHRoZSBwZW9wbGUgd2hvc2UgUExBTk8gPT0gMSwgYnV0IGFycml2YWwgdGltZSBpcyBOT1QgTkEgYXJlIGluY2x1ZGVkIGluIGBwbF9uYWAuDQoqIEFwcGFyZW50bHksIHRoZSBhcnJpdmFsL2RlcGFydHVyZSB0aW1lcyBzaG91bGQgTk9UIGJlIE5BJ1MuIFRoZXkgc2hvdWxkIGJlIDAncy4NCg0K</div>
 
 
 

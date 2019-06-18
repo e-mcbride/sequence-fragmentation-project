@@ -75,12 +75,6 @@ All the people whose PLANO == 1, but arrival time is NOT NA are included in `pl_
 HOWEVER, Many of their PLANO == 1 have an ARRTM = NA. (correct formatting). So who are those people and why did they get NA's? I may need to move on to looking at the code itself for a bit. 
 
 
-## WHO is in `pl_na`
-
-Here is what I have figured out:
-
-* All the people whose PLANO == 1, but arrival time is NOT NA are included in `pl_na`.
-
 
 
 
@@ -91,7 +85,27 @@ Compare `arrival_time_3` to `arr_time3_add1` (and the same for departure time)
 
 Created in "02_modify-place-file.R"
 
+```{r}
+pl_mod <- read_rds(here("data","modified_pldat.rds"))
+```
 
+```{r}
+pl_wat <- sb_slo %>% 
+  select(pid, PLANO, arrival_time_3, arr_time3_add1, departure_time_3, dep_time3_add1) %>% 
+  filter(is.na(arr_time3_add1))
+```
+
+```{r}
+sb_slo <- pl_mod %>% filter(CTFIP == "SANTA BARBARA" | CTFIP == "SAN LUIS OBISPO")
+
+
+pl_mod$CTFIP %>% unique
+```
+
+
+### Check the creation of arrival_time_3
+
+Apparently, the arrival/departure times should NOT be NA'S. They should be 0's. Going back to the creation of the arrival and departure times in this format. THis is in the script 
 
 # check for start/end time consistency
 
@@ -99,4 +113,13 @@ Created in "02_modify-place-file.R"
 
 # NA'S in the middle?
 
+
+
+
+# WHO is in `pl_na`
+
+Here is what I have figured out:
+
+* All the people whose PLANO == 1, but arrival time is NOT NA are included in `pl_na`.
+* Apparently, the arrival/departure times should NOT be NA'S. They should be 0's.
 
