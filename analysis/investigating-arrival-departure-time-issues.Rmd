@@ -5,9 +5,42 @@ output: html_notebook
 
 # FORNOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further
 
+
+
+
 # also need to investigate the NA's:
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+```
+
+
+## Look at who has the arrival and departure times as NA
+
+Extract the pid's where arrival and departure times are NA
+```{r}
+pids_na_arr_dep <- travel_dat %>% gather(key = "key", value = "value", -pid) %>% 
+  filter(is.na(value)) %>% .$pid %>% unique
+```
+
+Read the raw CHTS files
+```{r}
+
+```
+
+
+## Look at the code itself
+
 
 # check for start/end time consistency
 
-# investigate to make sure all start at time 1, end at time 1439
+# investigate to make sure all start at time 1, end at time 1439 vs 1440
+
+# NA'S in the middle?
+
 
