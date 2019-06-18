@@ -1790,51 +1790,53 @@ library(here)</code></pre>
 <p>Extract the pid’s where any time value is NA</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGlkc19uYV9hcnJfZGVwIDwtIHRyYXZlbF9kYXQgJT4lIFxuICBzZWxlY3QocGlkLCBhcnJfdGltZTNfYWRkMSwgZGVwX3RpbWUzX2FkZDEpICU+JVxuICBnYXRoZXIoa2V5ID0gXCJrZXlcIiwgdmFsdWUgPSBcInZhbHVlXCIsIC1waWQpICU+JSBcbiAgZmlsdGVyKGlzLm5hKHZhbHVlKSkgJT4lIFxuICAuJHBpZCAlPiUgdW5pcXVlXG5gYGAifQ== -->
+<pre class="r"><code>pids_na_arr_dep &lt;- travel_dat %&gt;% 
+  select(pid, arr_time3_add1, dep_time3_add1) %&gt;%
+  gather(key = &quot;key&quot;, value = &quot;value&quot;, -pid) %&gt;% 
+  filter(is.na(value)) %&gt;% 
+  .$pid %&gt;% unique</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Read the raw CHTS files, extract place file</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2h0cyA8LSByZWFkX3JkcyhoZXJlKFwiZGF0YS1yYXdcIiwgXCJjaHRzX2FsbF8yMDE5LTA1LTIyLnJkc1wiKSlcbnBsYWNlIDwtIGNodHMkUExBQ0VcbmBgYCJ9 -->
+<pre class="r"><code>chts &lt;- read_rds(here(&quot;data-raw&quot;, &quot;chts_all_2019-05-22.rds&quot;))
+place &lt;- chts$PLACE</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Extract the rows with pids that have NA’s for their arr/dep times</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcblxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcbnBsYWNlICU8PiUgbXV0YXRlKHBpZCA9IHN0cl9jKFNBTVBOLCBQRVJOTywgc2VwID0gXCJcIikgJT4lIGFzLm51bWVyaWMoKSlcblxucGxfbmEgPC0gcGxhY2UgJT4lIGZpbHRlcihwaWQgJWluJSBwaWRzX25hX2Fycl9kZXApXG5gYGAifQ== -->
 <pre class="r"><code>library(magrittr)
-</code></pre>
+place %&lt;&gt;% mutate(pid = str_c(SAMPN, PERNO, sep = &quot;&quot;) %&gt;% as.numeric())
+
+pl_na &lt;- place %&gt;% filter(pid %in% pids_na_arr_dep)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog46S847ixbWFncml0dHLjpLzjuLJcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g46S847ixcGFja2FnZTpwdXJycuOkvOO4sjpcblxuICAgIHNldF9uYW1lc1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDjpLzjuLFwYWNrYWdlOnRpZHly46S847iyOlxuXG4gICAgZXh0cmFjdFxuIn0= -->
-<pre><code>
-Attaching package: 㤼㸱magrittr㤼㸲
-
-The following object is masked from 㤼㸱package:purrr㤼㸲:
-
-    set_names
-
-The following object is masked from 㤼㸱package:tidyr㤼㸲:
-
-    extract</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Below, checking to see what arrival/departure times exist for PLANO == 1 in whole sample, and comparing to arr/dep times in <code>pl_na</code></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGwxJEFSUlRNICU+JVxuICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIFxuICAjIHVuaXF1ZSAlPiUgXG4gIFZpZXcoKVxuXG5gYGAifQ== -->
-<pre class="r"><code>pl1$ARRTM %&gt;%
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGwxICU+JVxuICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIFxuICAuJEFSUlRNICU+JSBcbiAgIyB1bmlxdWUgJT4lIFxuICBWaWV3KClcblxuYGBgIn0= -->
+<pre class="r"><code>pl1 %&gt;%
   filter(!is.na(ARRTM)) %&gt;% 
+  .$ARRTM %&gt;% 
   # unique %&gt;% 
   View()
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gVXNlTWV0aG9kKFwiZmlsdGVyX1wiKSA6IFxuICBubyBhcHBsaWNhYmxlIG1ldGhvZCBmb3IgJ2ZpbHRlcl8nIGFwcGxpZWQgdG8gYW4gb2JqZWN0IG9mIGNsYXNzIFwiY2hhcmFjdGVyXCJcbiJ9 -->
-<pre><code>Error in UseMethod(&quot;filter_&quot;) : 
-  no applicable method for &#39;filter_&#39; applied to an object of class &quot;character&quot;</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gZXZhbChsaHMsIHBhcmVudCwgcGFyZW50KSA6IG9iamVjdCAncGwxJyBub3QgZm91bmRcbiJ9 -->
+<pre><code>Error in eval(lhs, parent, parent) : object &#39;pl1&#39; not found</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>All the people whose PLANO == 1, but arrival time is NOT NA are included in <code>pl_na</code>.</p>
+<p>SRBI coded NA’s for</p>
 <p>HOWEVER, Many of their PLANO == 1 have an ARRTM = NA. (correct formatting). So who are those people and why did they get NA’s? I may need to move on to looking at the code itself for a bit.</p>
 </div>
 <div id="look-at-the-code-itself" class="section level2">
@@ -1845,39 +1847,56 @@ The following object is masked from 㤼㸱package:tidyr㤼㸲:
 <p>Created in “02_modify-place-file.R”</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxfbW9kJENURklQICU+JSB1bmlxdWVcblxuYGBgIn0= -->
-<pre class="r"><code>pl_mod$CTFIP %&gt;% unique
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxfbW9kIDwtIHJlYWRfcmRzKGhlcmUoXCJkYXRhXCIsXCJtb2RpZmllZF9wbGRhdC5yZHNcIikpXG5gYGAifQ== -->
+<pre class="r"><code>pl_mod &lt;- read_rds(here(&quot;data&quot;,&quot;modified_pldat.rds&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIlNPTEFOT1wiICAgICAgICAgIFwiU0FOIERJRUdPXCIgICAgICAgXCJNRVJDRURcIiAgICAgICAgICBcIlNBTlRBIEJBUkJBUkFcIiAgIFwiTE9TIEFOR0VMRVNcIiAgICBcbiBbNl0gXCJQTEFDRVJcIiAgICAgICAgICBcIlJJVkVSU0lERVwiICAgICAgIFwiU0FOIEZSQU5DSVNDT1wiICAgXCJTQU4gQkVSTkFSRElOT1wiICBcIlNBTlRBIENMQVJBXCIgICAgXG5bMTFdIFwiU0FDUkFNRU5UT1wiICAgICAgXCJPUkFOR0VcIiAgICAgICAgICBcIkxBS0VcIiAgICAgICAgICAgIFwiU1VUVEVSXCIgICAgICAgICAgXCJTQU4gTUFURU9cIiAgICAgIFxuWzE2XSBcIlRVTEFSRVwiICAgICAgICAgIFwiS0VSTlwiICAgICAgICAgICAgXCJGUkVTTk9cIiAgICAgICAgICBcIkNPTlRSQSBDT1NUQVwiICAgIFwiVkVOVFVSQVwiICAgICAgICBcblsyMV0gXCJBTEFNRURBXCIgICAgICAgICBcIk1BREVSQVwiICAgICAgICAgIFwiVEVIQU1BXCIgICAgICAgICAgXCJJTVBFUklBTFwiICAgICAgICBcIkVMIERPUkFET1wiICAgICAgXG5bMjZdIFwiSFVNQk9MRFRcIiAgICAgICAgXCJTVEFOSVNMQVVTXCIgICAgICBcIlNPTk9NQVwiICAgICAgICAgIFwiU0FOIEpPQVFVSU5cIiAgICAgXCJCVVRURVwiICAgICAgICAgIFxuWzMxXSBcIk1BUklOXCIgICAgICAgICAgIFwiQU1BRE9SXCIgICAgICAgICAgXCJTSEFTVEFcIiAgICAgICAgICBcIkFMUElORVwiICAgICAgICAgIFwiTUVORE9DSU5PXCIgICAgICBcblszNl0gXCJJTllPXCIgICAgICAgICAgICBcIlNBTlRBIENSVVpcIiAgICAgIFwiU0lTS0lZT1VcIiAgICAgICAgXCJNT05URVJFWVwiICAgICAgICBcIlNBTiBMVUlTIE9CSVNQT1wiXG5bNDFdIFwiU0lFUlJBXCIgICAgICAgICAgXCJZVUJBXCIgICAgICAgICAgICBcIk5FVkFEQVwiICAgICAgICAgIFwiVFVPTFVNTkVcIiAgICAgICAgXCJOQVBBXCIgICAgICAgICAgIFxuWzQ2XSBcIlNBTiBCRU5JVE9cIiAgICAgIFwiWU9MT1wiICAgICAgICAgICAgXCJNT05PXCIgICAgICAgICAgICBcIkNPTFVTQVwiICAgICAgICAgIFwiUExVTUFTXCIgICAgICAgICBcbls1MV0gXCJNT0RPQ1wiICAgICAgICAgICBcIkRFTCBOT1JURVwiICAgICAgIFwiVFJJTklUWVwiICAgICAgICAgXCJNQVJJUE9TQVwiICAgICAgICBcIktJTkdTXCIgICAgICAgICAgXG5bNTZdIFwiQ0FMQVZFUkFTXCIgICAgICAgXCJMQVNTRU5cIiAgICAgICAgICBcIkdMRU5OXCIgICAgICAgICAgIE5BICAgICAgICAgICAgICAgIFwiTG9zIEFuZ2VsZXNcIiAgICBcbls2MV0gXCJPcmFuZ2VcIiAgICAgICAgICBcIlNhbiBCZXJuYXJkaW5vXCIgIFwiUml2ZXJzaWRlXCIgICAgICAgXCJWZW50dXJhXCIgICAgICAgIFxuIn0= -->
-<pre><code> [1] &quot;SOLANO&quot;          &quot;SAN DIEGO&quot;       &quot;MERCED&quot;          &quot;SANTA BARBARA&quot;   &quot;LOS ANGELES&quot;    
- [6] &quot;PLACER&quot;          &quot;RIVERSIDE&quot;       &quot;SAN FRANCISCO&quot;   &quot;SAN BERNARDINO&quot;  &quot;SANTA CLARA&quot;    
-[11] &quot;SACRAMENTO&quot;      &quot;ORANGE&quot;          &quot;LAKE&quot;            &quot;SUTTER&quot;          &quot;SAN MATEO&quot;      
-[16] &quot;TULARE&quot;          &quot;KERN&quot;            &quot;FRESNO&quot;          &quot;CONTRA COSTA&quot;    &quot;VENTURA&quot;        
-[21] &quot;ALAMEDA&quot;         &quot;MADERA&quot;          &quot;TEHAMA&quot;          &quot;IMPERIAL&quot;        &quot;EL DORADO&quot;      
-[26] &quot;HUMBOLDT&quot;        &quot;STANISLAUS&quot;      &quot;SONOMA&quot;          &quot;SAN JOAQUIN&quot;     &quot;BUTTE&quot;          
-[31] &quot;MARIN&quot;           &quot;AMADOR&quot;          &quot;SHASTA&quot;          &quot;ALPINE&quot;          &quot;MENDOCINO&quot;      
-[36] &quot;INYO&quot;            &quot;SANTA CRUZ&quot;      &quot;SISKIYOU&quot;        &quot;MONTEREY&quot;        &quot;SAN LUIS OBISPO&quot;
-[41] &quot;SIERRA&quot;          &quot;YUBA&quot;            &quot;NEVADA&quot;          &quot;TUOLUMNE&quot;        &quot;NAPA&quot;           
-[46] &quot;SAN BENITO&quot;      &quot;YOLO&quot;            &quot;MONO&quot;            &quot;COLUSA&quot;          &quot;PLUMAS&quot;         
-[51] &quot;MODOC&quot;           &quot;DEL NORTE&quot;       &quot;TRINITY&quot;         &quot;MARIPOSA&quot;        &quot;KINGS&quot;          
-[56] &quot;CALAVERAS&quot;       &quot;LASSEN&quot;          &quot;GLENN&quot;           NA                &quot;Los Angeles&quot;    
-[61] &quot;Orange&quot;          &quot;San Bernardino&quot;  &quot;Riverside&quot;       &quot;Ventura&quot;        </code></pre>
-<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxfd2F0IDwtIHBsX21vZCAlPiUgXG4gIHNlbGVjdChwaWQsIFBMQU5PLCBhcnJpdmFsX3RpbWVfMywgYXJyX3RpbWUzX2FkZDEsIGRlcGFydHVyZV90aW1lXzMsIGRlcF90aW1lM19hZGQxKSAlPiUgXG4gIGZpbHRlcihpcy5uYShhcnJfdGltZTNfYWRkMSkpXG5gYGAifQ== -->
+<pre class="r"><code>pl_wat &lt;- pl_mod %&gt;% 
+  select(pid, PLANO, arrival_time_3, arr_time3_add1, departure_time_3, dep_time3_add1) %&gt;% 
+  filter(is.na(arr_time3_add1))</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
 <div id="check-the-creation-of-arrival_time_3" class="section level3">
 <h3>Check the creation of arrival_time_3</h3>
-<p>Apparently, the arrival/departure times should NOT be NA’S. They should be 0’s. Going back to the creation of the arrival and departure times in this format. THis is in the script</p>
+<p>Apparently, the arrival/departure times should NOT be NA’S. They should be 0’s. Going back to the creation of the arrival and departure times in this format. This is in the script <code>01_03_time-in-min-since-3am.R</code></p>
+<p>Below is the code from that script:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29udmVydF90aW1lXzNBIDwtIGZ1bmN0aW9uKGV4dF90aW1lX2NvbCkge1xuICB0MyA9IGV4dF90aW1lX2NvbCAtIDE4MFxuICBpZl9lbHNlKHQzIDwgMCwgdDMgKyAyNCo2MCwgdDMpXG59XG5gYGAifQ== -->
+<pre class="r"><code>convert_time_3A &lt;- function(ext_time_col) {
+  t3 = ext_time_col - 180
+  if_else(t3 &lt; 0, t3 + 24*60, t3)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9jYXRpb25zX3RpbWV2YXJzIDwtIHBsYWNlICU+JSBcbiAgbXV0YXRlKGFycml2YWxfdGltZV8zICAgPSBjb252ZXJ0X3RpbWVfM0EoQVJSX0hSICogNjAgKyBBUlJfTUlOKSxcbiAgICAgICAgIGRlcGFydHVyZV90aW1lXzMgPSBjb252ZXJ0X3RpbWVfM0EoREVQX0hSICogNjAgKyBERVBfTUlOKSxcbiAgICAgICAgIHBsYWNlX2R1cmF0aW9uICAgPSBkZXBhcnR1cmVfdGltZV8zIC0gYXJyaXZhbF90aW1lXzMgKyAxLFxuICAgICAgICAgdHJpcF9kdXJhdGlvbiAgICA9IFRSSVBEVVIpICMgJT4lIHNlbGVjdChTQU1QTixQRVJOTyxQTEFOTywgYXJyaXZhbF90aW1lXzMsIGRlcGFydHVyZV90aW1lXzMsIHBsYWNlX2R1cmF0aW9uKVxuYGBgIn0= -->
+<pre class="r"><code>locations_timevars &lt;- place %&gt;% 
+  mutate(arrival_time_3   = convert_time_3A(ARR_HR * 60 + ARR_MIN),
+         departure_time_3 = convert_time_3A(DEP_HR * 60 + DEP_MIN),
+         place_duration   = departure_time_3 - arrival_time_3 + 1,
+         trip_duration    = TRIPDUR) # %&gt;% select(SAMPN,PERNO,PLANO, arrival_time_3, departure_time_3, place_duration)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueCA8LSBsb2NhdGlvbnNfdGltZXZhcnMgJT4lIHNlbGVjdChwaWQsUExBTk8sIEFSUl9IUiwgQVJSX01JTiwgYXJyaXZhbF90aW1lXzMsIERFUF9IUiwgREVQX01JTiwgZGVwYXJ0dXJlX3RpbWVfMywgcGxhY2VfZHVyYXRpb24pICU+JSBtdXRhdGUoYXJyaHJfbWluID0gQVJSX0hSICo2MClcbmBgYCJ9 -->
+<pre class="r"><code>x &lt;- locations_timevars %&gt;% select(pid,PLANO, ARR_HR, ARR_MIN, arrival_time_3, DEP_HR, DEP_MIN, departure_time_3, place_duration) %&gt;% mutate(arrhr_min = ARR_HR *60)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="srbi-vs-nustats" class="section level3">
+<h3>SRBI vs NUSTATS</h3>
 </div>
 </div>
 </div>
@@ -1900,7 +1919,7 @@ The following object is masked from 㤼㸱package:tidyr㤼㸲:
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpGT1IgTk9XOiBJIHdpbGwgcnVuIGFuIGFuYWx5c2lzIGV4Y2x1ZGluZyB0aGVzZSBwZW9wbGUgYXMgYW4gZXhwZXJpbWVudCB0byBzZWUgaG93IGl0IGdvZXMuIFRPTU9SUk9XIEkgd2lsbCBpbnZlc3RpZ2F0ZSB3aG8gdGhleSBhcmUgZnVydGhlcg0KDQoNCg0KDQojIGFsc28gbmVlZCB0byBpbnZlc3RpZ2F0ZSB0aGUgTkEnczoNCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShoZXJlKQ0KYGBgDQoNCmBgYHtyfQ0KdHJhdmVsX2RhdCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwgInBsYWNlc190cmF2ZWwtYWRkZWQucmRzIikpDQpgYGANCg0KDQojIyBMb29rIGF0IHdobyBoYXMgdGhlIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcyBhcyBOQQ0KDQpFeHRyYWN0IHRoZSBwaWQncyB3aGVyZSBhbnkgdGltZSB2YWx1ZSBpcyBOQQ0KYGBge3J9DQpwaWRzX25hX2Fycl9kZXAgPC0gdHJhdmVsX2RhdCAlPiUgDQogIHNlbGVjdChwaWQsIGFycl90aW1lM19hZGQxLCBkZXBfdGltZTNfYWRkMSkgJT4lDQogIGdhdGhlcihrZXkgPSAia2V5IiwgdmFsdWUgPSAidmFsdWUiLCAtcGlkKSAlPiUgDQogIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSANCiAgLiRwaWQgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KDQoNClJlYWQgdGhlIHJhdyBDSFRTIGZpbGVzLCBleHRyYWN0IHBsYWNlIGZpbGUNCmBgYHtyfQ0KY2h0cyA8LSByZWFkX3JkcyhoZXJlKCJkYXRhLXJhdyIsICJjaHRzX2FsbF8yMDE5LTA1LTIyLnJkcyIpKQ0KcGxhY2UgPC0gY2h0cyRQTEFDRQ0KYGBgDQoNCkV4dHJhY3QgdGhlIHJvd3Mgd2l0aCBwaWRzIHRoYXQgaGF2ZSBOQSdzIGZvciB0aGVpciBhcnIvZGVwIHRpbWVzDQpgYGB7cn0NCmxpYnJhcnkobWFncml0dHIpDQpwbGFjZSAlPD4lIG11dGF0ZShwaWQgPSBzdHJfYyhTQU1QTiwgUEVSTk8sIHNlcCA9ICIiKSAlPiUgYXMubnVtZXJpYygpKQ0KDQpwbF9uYSA8LSBwbGFjZSAlPiUgZmlsdGVyKHBpZCAlaW4lIHBpZHNfbmFfYXJyX2RlcCkNCmBgYA0KDQoNCkJlbG93LCBjaGVja2luZyB0byBzZWUgd2hhdCBhcnJpdmFsL2RlcGFydHVyZSB0aW1lcyBleGlzdCBmb3IgUExBTk8gPT0gMSBpbiB3aG9sZSBzYW1wbGUsIGFuZCBjb21wYXJpbmcgdG8gYXJyL2RlcCB0aW1lcyBpbiBgcGxfbmFgDQoNCmBgYHtyfQ0KcGwxIDwtIHBsYWNlICU+JSBmaWx0ZXIoUExBTk8gPT0gMSkgJT4lIHNlbGVjdChwaWQsIFBMQU5PLCBBUlJfSFIsIEFSUl9NSU4sIEFSUlRNKQ0KDQpwbDEgJT4lDQogIGZpbHRlcighaXMubmEoQVJSVE0pKSAlPiUgDQogIC4kQVJSVE0gJT4lIA0KICAjIHVuaXF1ZSAlPiUgDQogIFZpZXcoKQ0KDQpwbF9uYSAlPiUgZmlsdGVyKFBMQU5PID09IDEpICU+JSANCiAgIyBzZWxlY3QocGlkLCBQTEFOTywgQVJSX0hSLCBBUlJfTUlOLCBBUlJUTSkgJT4lIA0KICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIA0KICAuJEFSUlRNICU+JSANCiAgIyB1bmlxdWUgJT4lIA0KICBWaWV3DQoNCmBgYA0KDQoNCkFsbCB0aGUgcGVvcGxlIHdob3NlIFBMQU5PID09IDEsIGJ1dCBhcnJpdmFsIHRpbWUgaXMgTk9UIE5BIGFyZSBpbmNsdWRlZCBpbiBgcGxfbmFgLg0KDQpIT1dFVkVSLCBNYW55IG9mIHRoZWlyIFBMQU5PID09IDEgaGF2ZSBhbiBBUlJUTSA9IE5BLiAoY29ycmVjdCBmb3JtYXR0aW5nKS4gU28gd2hvIGFyZSB0aG9zZSBwZW9wbGUgYW5kIHdoeSBkaWQgdGhleSBnZXQgTkEncz8gSSBtYXkgbmVlZCB0byBtb3ZlIG9uIHRvIGxvb2tpbmcgYXQgdGhlIGNvZGUgaXRzZWxmIGZvciBhIGJpdC4gDQoNCg0KDQoNCg0KIyMgTG9vayBhdCB0aGUgY29kZSBpdHNlbGYNCg0KIyMjIGNoZWNrIG1vZGlmaWVkIHBsYWNlIGZpbGUNCkNvbXBhcmUgYGFycml2YWxfdGltZV8zYCB0byBgYXJyX3RpbWUzX2FkZDFgIChhbmQgdGhlIHNhbWUgZm9yIGRlcGFydHVyZSB0aW1lKQ0KDQpDcmVhdGVkIGluICIwMl9tb2RpZnktcGxhY2UtZmlsZS5SIg0KDQpgYGB7cn0NCnBsX21vZCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwibW9kaWZpZWRfcGxkYXQucmRzIikpDQpgYGANCg0KYGBge3J9DQpwbF93YXQgPC0gc2Jfc2xvICU+JSANCiAgc2VsZWN0KHBpZCwgUExBTk8sIGFycml2YWxfdGltZV8zLCBhcnJfdGltZTNfYWRkMSwgZGVwYXJ0dXJlX3RpbWVfMywgZGVwX3RpbWUzX2FkZDEpICU+JSANCiAgZmlsdGVyKGlzLm5hKGFycl90aW1lM19hZGQxKSkNCmBgYA0KDQpgYGB7cn0NCnNiX3NsbyA8LSBwbF9tb2QgJT4lIGZpbHRlcihDVEZJUCA9PSAiU0FOVEEgQkFSQkFSQSIgfCBDVEZJUCA9PSAiU0FOIExVSVMgT0JJU1BPIikNCg0KDQpwbF9tb2QkQ1RGSVAgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KIyMjIENoZWNrIHRoZSBjcmVhdGlvbiBvZiBhcnJpdmFsX3RpbWVfMw0KDQpBcHBhcmVudGx5LCB0aGUgYXJyaXZhbC9kZXBhcnR1cmUgdGltZXMgc2hvdWxkIE5PVCBiZSBOQSdTLiBUaGV5IHNob3VsZCBiZSAwJ3MuIEdvaW5nIGJhY2sgdG8gdGhlIGNyZWF0aW9uIG9mIHRoZSBhcnJpdmFsIGFuZCBkZXBhcnR1cmUgdGltZXMgaW4gdGhpcyBmb3JtYXQuIFRIaXMgaXMgaW4gdGhlIHNjcmlwdCANCg0KIyBjaGVjayBmb3Igc3RhcnQvZW5kIHRpbWUgY29uc2lzdGVuY3kNCg0KIyBpbnZlc3RpZ2F0ZSB0byBtYWtlIHN1cmUgYWxsIHN0YXJ0IGF0IHRpbWUgMSwgZW5kIGF0IHRpbWUgMTQzOSB2cyAxNDQwDQoNCiMgTkEnUyBpbiB0aGUgbWlkZGxlPw0KDQoNCg0KDQojIFdITyBpcyBpbiBgcGxfbmFgDQoNCkhlcmUgaXMgd2hhdCBJIGhhdmUgZmlndXJlZCBvdXQ6DQoNCiogQWxsIHRoZSBwZW9wbGUgd2hvc2UgUExBTk8gPT0gMSwgYnV0IGFycml2YWwgdGltZSBpcyBOT1QgTkEgYXJlIGluY2x1ZGVkIGluIGBwbF9uYWAuDQoqIEFwcGFyZW50bHksIHRoZSBhcnJpdmFsL2RlcGFydHVyZSB0aW1lcyBzaG91bGQgTk9UIGJlIE5BJ1MuIFRoZXkgc2hvdWxkIGJlIDAncy4NCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpGT1IgTk9XOiBJIHdpbGwgcnVuIGFuIGFuYWx5c2lzIGV4Y2x1ZGluZyB0aGVzZSBwZW9wbGUgYXMgYW4gZXhwZXJpbWVudCB0byBzZWUgaG93IGl0IGdvZXMuIFRPTU9SUk9XIEkgd2lsbCBpbnZlc3RpZ2F0ZSB3aG8gdGhleSBhcmUgZnVydGhlcg0KDQoNCg0KDQojIGFsc28gbmVlZCB0byBpbnZlc3RpZ2F0ZSB0aGUgTkEnczoNCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShoZXJlKQ0KYGBgDQoNCmBgYHtyfQ0KdHJhdmVsX2RhdCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwgInBsYWNlc190cmF2ZWwtYWRkZWQucmRzIikpDQpgYGANCg0KDQojIyBMb29rIGF0IHdobyBoYXMgdGhlIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcyBhcyBOQQ0KDQpFeHRyYWN0IHRoZSBwaWQncyB3aGVyZSBhbnkgdGltZSB2YWx1ZSBpcyBOQQ0KYGBge3J9DQpwaWRzX25hX2Fycl9kZXAgPC0gdHJhdmVsX2RhdCAlPiUgDQogIHNlbGVjdChwaWQsIGFycl90aW1lM19hZGQxLCBkZXBfdGltZTNfYWRkMSkgJT4lDQogIGdhdGhlcihrZXkgPSAia2V5IiwgdmFsdWUgPSAidmFsdWUiLCAtcGlkKSAlPiUgDQogIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSANCiAgLiRwaWQgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KDQoNClJlYWQgdGhlIHJhdyBDSFRTIGZpbGVzLCBleHRyYWN0IHBsYWNlIGZpbGUNCmBgYHtyfQ0KY2h0cyA8LSByZWFkX3JkcyhoZXJlKCJkYXRhLXJhdyIsICJjaHRzX2FsbF8yMDE5LTA1LTIyLnJkcyIpKQ0KcGxhY2UgPC0gY2h0cyRQTEFDRQ0KYGBgDQoNCkV4dHJhY3QgdGhlIHJvd3Mgd2l0aCBwaWRzIHRoYXQgaGF2ZSBOQSdzIGZvciB0aGVpciBhcnIvZGVwIHRpbWVzDQpgYGB7cn0NCmxpYnJhcnkobWFncml0dHIpDQpwbGFjZSAlPD4lIG11dGF0ZShwaWQgPSBzdHJfYyhTQU1QTiwgUEVSTk8sIHNlcCA9ICIiKSAlPiUgYXMubnVtZXJpYygpKQ0KDQpwbF9uYSA8LSBwbGFjZSAlPiUgZmlsdGVyKHBpZCAlaW4lIHBpZHNfbmFfYXJyX2RlcCkNCmBgYA0KDQoNCkJlbG93LCBjaGVja2luZyB0byBzZWUgd2hhdCBhcnJpdmFsL2RlcGFydHVyZSB0aW1lcyBleGlzdCBmb3IgUExBTk8gPT0gMSBpbiB3aG9sZSBzYW1wbGUsIGFuZCBjb21wYXJpbmcgdG8gYXJyL2RlcCB0aW1lcyBpbiBgcGxfbmFgDQoNCmBgYHtyfQ0KcGwxIDwtIHBsYWNlICU+JSBmaWx0ZXIoUExBTk8gPT0gMSkgJT4lIHNlbGVjdChzb3VyY2UscGlkLCBQTEFOTywgQVJSX0hSLCBBUlJfTUlOLCBBUlJUTSkNCg0KcGwxICU+JQ0KICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIA0KICAuJEFSUlRNICU+JSANCiAgIyB1bmlxdWUgJT4lIA0KICBWaWV3KCkNCg0KcGwxICU+JQ0KICBmaWx0ZXIoaXMubmEoQVJSX0hSKSkgJT4lIA0KICAjIC4kQVJSVE0gJT4lIA0KICAjIHVuaXF1ZSAlPiUgDQogIFZpZXcoKQ0KDQpwbF9uYSAlPiUgZmlsdGVyKFBMQU5PID09IDEpICU+JSANCiAgIyBzZWxlY3QocGlkLCBQTEFOTywgQVJSX0hSLCBBUlJfTUlOLCBBUlJUTSkgJT4lIA0KICBmaWx0ZXIoIWlzLm5hKEFSUlRNKSkgJT4lIA0KICAuJEFSUlRNICU+JSANCiAgIyB1bmlxdWUgJT4lIA0KICBWaWV3DQoNCmBgYA0KDQoNCkFsbCB0aGUgcGVvcGxlIHdob3NlIFBMQU5PID09IDEsIGJ1dCBhcnJpdmFsIHRpbWUgaXMgTk9UIE5BIGFyZSBpbmNsdWRlZCBpbiBgcGxfbmFgLg0KDQpTUkJJIGNvZGVkIE5BJ3MgZm9yIA0KDQpIT1dFVkVSLCBNYW55IG9mIHRoZWlyIFBMQU5PID09IDEgaGF2ZSBhbiBBUlJUTSA9IE5BLiAoY29ycmVjdCBmb3JtYXR0aW5nKS4gU28gd2hvIGFyZSB0aG9zZSBwZW9wbGUgYW5kIHdoeSBkaWQgdGhleSBnZXQgTkEncz8gSSBtYXkgbmVlZCB0byBtb3ZlIG9uIHRvIGxvb2tpbmcgYXQgdGhlIGNvZGUgaXRzZWxmIGZvciBhIGJpdC4gDQoNCg0KDQoNCg0KIyMgTG9vayBhdCB0aGUgY29kZSBpdHNlbGYNCg0KIyMjIGNoZWNrIG1vZGlmaWVkIHBsYWNlIGZpbGUNCkNvbXBhcmUgYGFycml2YWxfdGltZV8zYCB0byBgYXJyX3RpbWUzX2FkZDFgIChhbmQgdGhlIHNhbWUgZm9yIGRlcGFydHVyZSB0aW1lKQ0KDQpDcmVhdGVkIGluICIwMl9tb2RpZnktcGxhY2UtZmlsZS5SIg0KDQpgYGB7cn0NCnBsX21vZCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwibW9kaWZpZWRfcGxkYXQucmRzIikpDQpgYGANCg0KYGBge3J9DQpwbF93YXQgPC0gcGxfbW9kICU+JSANCiAgc2VsZWN0KHBpZCwgUExBTk8sIGFycml2YWxfdGltZV8zLCBhcnJfdGltZTNfYWRkMSwgZGVwYXJ0dXJlX3RpbWVfMywgZGVwX3RpbWUzX2FkZDEpICU+JSANCiAgZmlsdGVyKGlzLm5hKGFycl90aW1lM19hZGQxKSkNCmBgYA0KDQoNCg0KIyMjIENoZWNrIHRoZSBjcmVhdGlvbiBvZiBhcnJpdmFsX3RpbWVfMw0KDQpBcHBhcmVudGx5LCB0aGUgYXJyaXZhbC9kZXBhcnR1cmUgdGltZXMgc2hvdWxkIE5PVCBiZSBOQSdTLiBUaGV5IHNob3VsZCBiZSAwJ3MuIEdvaW5nIGJhY2sgdG8gdGhlIGNyZWF0aW9uIG9mIHRoZSBhcnJpdmFsIGFuZCBkZXBhcnR1cmUgdGltZXMgaW4gdGhpcyBmb3JtYXQuIFRoaXMgaXMgaW4gdGhlIHNjcmlwdCBgMDFfMDNfdGltZS1pbi1taW4tc2luY2UtM2FtLlJgDQoNCkJlbG93IGlzIHRoZSBjb2RlIGZyb20gdGhhdCBzY3JpcHQ6DQpgYGB7cn0NCmNvbnZlcnRfdGltZV8zQSA8LSBmdW5jdGlvbihleHRfdGltZV9jb2wpIHsNCiAgdDMgPSBleHRfdGltZV9jb2wgLSAxODANCiAgaWZfZWxzZSh0MyA8IDAsIHQzICsgMjQqNjAsIHQzKQ0KfQ0KYGBgDQoNCmBgYHtyfQ0KbG9jYXRpb25zX3RpbWV2YXJzIDwtIHBsYWNlICU+JSANCiAgbXV0YXRlKGFycml2YWxfdGltZV8zICAgPSBjb252ZXJ0X3RpbWVfM0EoQVJSX0hSICogNjAgKyBBUlJfTUlOKSwNCiAgICAgICAgIGRlcGFydHVyZV90aW1lXzMgPSBjb252ZXJ0X3RpbWVfM0EoREVQX0hSICogNjAgKyBERVBfTUlOKSwNCiAgICAgICAgIHBsYWNlX2R1cmF0aW9uICAgPSBkZXBhcnR1cmVfdGltZV8zIC0gYXJyaXZhbF90aW1lXzMgKyAxLA0KICAgICAgICAgdHJpcF9kdXJhdGlvbiAgICA9IFRSSVBEVVIpICMgJT4lIHNlbGVjdChTQU1QTixQRVJOTyxQTEFOTywgYXJyaXZhbF90aW1lXzMsIGRlcGFydHVyZV90aW1lXzMsIHBsYWNlX2R1cmF0aW9uKQ0KYGBgDQoNCmBgYHtyfQ0KeCA8LSBsb2NhdGlvbnNfdGltZXZhcnMgJT4lIHNlbGVjdChwaWQsUExBTk8sIEFSUl9IUiwgQVJSX01JTiwgYXJyaXZhbF90aW1lXzMsIERFUF9IUiwgREVQX01JTiwgZGVwYXJ0dXJlX3RpbWVfMywgcGxhY2VfZHVyYXRpb24pICU+JSBtdXRhdGUoYXJyaHJfbWluID0gQVJSX0hSICo2MCkNCmBgYA0KDQojIyMgU1JCSSB2cyBOVVNUQVRTDQoNCiMgY2hlY2sgZm9yIHN0YXJ0L2VuZCB0aW1lIGNvbnNpc3RlbmN5DQoNCiMgaW52ZXN0aWdhdGUgdG8gbWFrZSBzdXJlIGFsbCBzdGFydCBhdCB0aW1lIDEsIGVuZCBhdCB0aW1lIDE0MzkgdnMgMTQ0MA0KDQojIE5BJ1MgaW4gdGhlIG1pZGRsZT8NCg0KDQoNCg0KIyBXSE8gaXMgaW4gYHBsX25hYA0KDQpIZXJlIGlzIHdoYXQgSSBoYXZlIGZpZ3VyZWQgb3V0Og0KDQoqIEFsbCB0aGUgcGVvcGxlIHdob3NlIFBMQU5PID09IDEsIGJ1dCBhcnJpdmFsIHRpbWUgaXMgTk9UIE5BIGFyZSBpbmNsdWRlZCBpbiBgcGxfbmFgLg0KKiBBcHBhcmVudGx5LCB0aGUgYXJyaXZhbC9kZXBhcnR1cmUgdGltZXMgc2hvdWxkIE5PVCBiZSBOQSdTLiBUaGV5IHNob3VsZCBiZSAwJ3MuDQoNCg==</div>
 
 
 
