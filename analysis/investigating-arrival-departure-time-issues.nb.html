@@ -1767,9 +1767,7 @@ $(document).ready(function () {
 
 
 <!-- rnb-text-begin -->
-<div id="fornow-i-will-run-an-analysis-excluding-these-people-as-an-experiment-to-see-how-it-goes.-tomorrow-i-will-investigate-who-they-are-further" class="section level1">
-<h1>FORNOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further</h1>
-</div>
+<p>FOR NOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further</p>
 <div id="also-need-to-investigate-the-nas" class="section level1">
 <h1>also need to investigate the NA’s:</h1>
 <!-- rnb-text-end -->
@@ -1789,24 +1787,62 @@ library(here)</code></pre>
 <!-- rnb-text-begin -->
 <div id="look-at-who-has-the-arrival-and-departure-times-as-na" class="section level2">
 <h2>Look at who has the arrival and departure times as NA</h2>
-<p>Extract the pid’s where arrival and departure times are NA</p>
+<p>Extract the pid’s where any time value is NA</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub25seV9uYXMgPC0gdHJhdmVsX2RhdCAlPiUgZ2F0aGVyKGtleSA9IFwia2V5XCIsIHZhbHVlID0gXCJ2YWx1ZVwiLCAtcGlkKSAlPiUgXG4gIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSAucGlkICU+JSB1bmlxdWVcblxuYGBgIn0= -->
-<pre class="r"><code>only_nas &lt;- travel_dat %&gt;% gather(key = &quot;key&quot;, value = &quot;value&quot;, -pid) %&gt;% 
-  filter(is.na(value)) %&gt;% .pid %&gt;% unique
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Read the raw CHTS files, extract place file</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Extract the rows with pids that have NA’s for their arr/dep times</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcblxuYGBgIn0= -->
+<pre class="r"><code>library(magrittr)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gLnBpZCguKSA6IGNvdWxkIG5vdCBmaW5kIGZ1bmN0aW9uIFwiLnBpZFwiXG4ifQ== -->
-<pre><code>Error in .pid(.) : could not find function &quot;.pid&quot;</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog46S847ixbWFncml0dHLjpLzjuLJcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g46S847ixcGFja2FnZTpwdXJycuOkvOO4sjpcblxuICAgIHNldF9uYW1lc1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDjpLzjuLFwYWNrYWdlOnRpZHly46S847iyOlxuXG4gICAgZXh0cmFjdFxuIn0= -->
+<pre><code>
+Attaching package: 㤼㸱magrittr㤼㸲
+
+The following object is masked from 㤼㸱package:purrr㤼㸲:
+
+    set_names
+
+The following object is masked from 㤼㸱package:tidyr㤼㸲:
+
+    extract</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Read the raw CHTS files</p>
+<div id="notes-on-this" class="section level4">
+<h4>Notes on this:</h4>
+<p>It does not appear that the people in <code>pl_na</code> are different in a noticeable way from anyone else in terms of the presence of arrival and departure times. All of their PLANO == 1 have an ARRTM = NA. I will now check whether that is true for the rest of the sample</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGwxJEFSUlRNICU+JSB1bmlxdWVcblxuYGBgIn0= -->
+<pre class="r"><code>pl1$ARRTM %&gt;% unique
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBOQSAgICAgICAgICAgXCI3OjE1XCIgICAgICAgXCIwODowNVwiICAgICAgXCI3OjMwXCIgICAgICAgXCIxNTozMFwiICAgICAgXCJSZWZ1c2VkXCIgICAgXCI3OjQ1XCIgICAgICBcbiBbOF0gXCIzOjA4XCIgICAgICAgXCI3OjAwXCIgICAgICAgXCIxNjo1OFwiICAgICAgXCI1OjQ1XCIgICAgICAgXCJEb27vv710IGtub3dcIiBcIjAzOjAwXCIgICAgICBcIjE3OjAwXCIgICAgIFxuWzE1XSBcIjk6MDBcIiAgICAgICBcIjA0OjAwXCIgICAgICBcIjM6MTVcIiAgICAgICBcIjU6MzBcIiAgICAgICBcIjk6NDBcIiAgICAgICBcIjQ6MDBcIiAgICAgICBcIjExOjAwXCIgICAgIFxuWzIyXSBcIjEzOjMwXCIgICAgICBcIjM6MDBcIiAgICAgICBcIjg6MDBcIiAgICAgICBcIjM6NDVcIiAgICAgICBcIjg6NDFcIiAgICAgICBcIjM6MDFcIiAgICAgIFxuIn0= -->
+<pre><code> [1] NA           &quot;7:15&quot;       &quot;08:05&quot;      &quot;7:30&quot;       &quot;15:30&quot;      &quot;Refused&quot;    &quot;7:45&quot;      
+ [8] &quot;3:08&quot;       &quot;7:00&quot;       &quot;16:58&quot;      &quot;5:45&quot;       &quot;Don�t know&quot; &quot;03:00&quot;      &quot;17:00&quot;     
+[15] &quot;9:00&quot;       &quot;04:00&quot;      &quot;3:15&quot;       &quot;5:30&quot;       &quot;9:40&quot;       &quot;4:00&quot;       &quot;11:00&quot;     
+[22] &quot;13:30&quot;      &quot;3:00&quot;       &quot;8:00&quot;       &quot;3:45&quot;       &quot;8:41&quot;       &quot;3:01&quot;      </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+</div>
+<div id="who-is-in-pl_na" class="section level2">
+<h2>WHO is in <code>pl_na</code></h2>
+<p>Here is what we have figured out:</p>
+<ul>
+<li>All of the people whose PLANO arrival time is NOT na are included in <code>pl_na</code>.</li>
+</ul>
 </div>
 <div id="look-at-the-code-itself" class="section level2">
 <h2>Look at the code itself</h2>
@@ -1823,7 +1859,7 @@ library(here)</code></pre>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQojIEZPUk5PVzogSSB3aWxsIHJ1biBhbiBhbmFseXNpcyBleGNsdWRpbmcgdGhlc2UgcGVvcGxlIGFzIGFuIGV4cGVyaW1lbnQgdG8gc2VlIGhvdyBpdCBnb2VzLiBUT01PUlJPVyBJIHdpbGwgaW52ZXN0aWdhdGUgd2hvIHRoZXkgYXJlIGZ1cnRoZXINCg0KDQoNCg0KIyBhbHNvIG5lZWQgdG8gaW52ZXN0aWdhdGUgdGhlIE5BJ3M6DQoNCmBgYHtyfQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KGhlcmUpDQpgYGANCg0KYGBge3J9DQp0cmF2ZWxfZGF0IDwtIHJlYWRfcmRzKGhlcmUoImRhdGEiLCAicGxhY2VzX3RyYXZlbC1hZGRlZC5yZHMiKSkNCmBgYA0KDQoNCiMjIExvb2sgYXQgd2hvIGhhcyB0aGUgYXJyaXZhbCBhbmQgZGVwYXJ0dXJlIHRpbWVzIGFzIE5BDQoNCkV4dHJhY3QgdGhlIHBpZCdzIHdoZXJlIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcyBhcmUgTkENCmBgYHtyfQ0KcGlkc19uYV9hcnJfZGVwIDwtIHRyYXZlbF9kYXQgJT4lIGdhdGhlcihrZXkgPSAia2V5IiwgdmFsdWUgPSAidmFsdWUiLCAtcGlkKSAlPiUgDQogIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSAuJHBpZCAlPiUgdW5pcXVlDQpgYGANCg0KUmVhZCB0aGUgcmF3IENIVFMgZmlsZXMNCmBgYHtyfQ0KDQpgYGANCg0KDQojIyBMb29rIGF0IHRoZSBjb2RlIGl0c2VsZg0KDQoNCiMgY2hlY2sgZm9yIHN0YXJ0L2VuZCB0aW1lIGNvbnNpc3RlbmN5DQoNCiMgaW52ZXN0aWdhdGUgdG8gbWFrZSBzdXJlIGFsbCBzdGFydCBhdCB0aW1lIDEsIGVuZCBhdCB0aW1lIDE0MzkgdnMgMTQ0MA0KDQojIE5BJ1MgaW4gdGhlIG1pZGRsZT8NCg0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpGT1IgTk9XOiBJIHdpbGwgcnVuIGFuIGFuYWx5c2lzIGV4Y2x1ZGluZyB0aGVzZSBwZW9wbGUgYXMgYW4gZXhwZXJpbWVudCB0byBzZWUgaG93IGl0IGdvZXMuIFRPTU9SUk9XIEkgd2lsbCBpbnZlc3RpZ2F0ZSB3aG8gdGhleSBhcmUgZnVydGhlcg0KDQoNCg0KDQojIGFsc28gbmVlZCB0byBpbnZlc3RpZ2F0ZSB0aGUgTkEnczoNCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShoZXJlKQ0KYGBgDQoNCmBgYHtyfQ0KdHJhdmVsX2RhdCA8LSByZWFkX3JkcyhoZXJlKCJkYXRhIiwgInBsYWNlc190cmF2ZWwtYWRkZWQucmRzIikpDQpgYGANCg0KDQojIyBMb29rIGF0IHdobyBoYXMgdGhlIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcyBhcyBOQQ0KDQpFeHRyYWN0IHRoZSBwaWQncyB3aGVyZSBhbnkgdGltZSB2YWx1ZSBpcyBOQQ0KYGBge3J9DQpwaWRzX25hX2Fycl9kZXAgPC0gdHJhdmVsX2RhdCAlPiUgDQogIHNlbGVjdChwaWQsIGFycl90aW1lM19hZGQxLCBkZXBfdGltZTNfYWRkMSkgJT4lDQogIGdhdGhlcihrZXkgPSAia2V5IiwgdmFsdWUgPSAidmFsdWUiLCAtcGlkKSAlPiUgDQogIGZpbHRlcihpcy5uYSh2YWx1ZSkpICU+JSANCiAgLiRwaWQgJT4lIHVuaXF1ZQ0KYGBgDQoNCg0KDQoNClJlYWQgdGhlIHJhdyBDSFRTIGZpbGVzLCBleHRyYWN0IHBsYWNlIGZpbGUNCmBgYHtyfQ0KY2h0cyA8LSByZWFkX3JkcyhoZXJlKCJkYXRhLXJhdyIsICJjaHRzX2FsbF8yMDE5LTA1LTIyLnJkcyIpKQ0KcGxhY2UgPC0gY2h0cyRQTEFDRQ0KYGBgDQoNCkV4dHJhY3QgdGhlIHJvd3Mgd2l0aCBwaWRzIHRoYXQgaGF2ZSBOQSdzIGZvciB0aGVpciBhcnIvZGVwIHRpbWVzDQpgYGB7cn0NCmxpYnJhcnkobWFncml0dHIpDQpwbGFjZSAlPD4lIG11dGF0ZShwaWQgPSBzdHJfYyhTQU1QTiwgUEVSTk8sIHNlcCA9ICIiKSAlPiUgYXMubnVtZXJpYygpKQ0KDQpwbF9uYSA8LSBwbGFjZSAlPiUgZmlsdGVyKHBpZCAlaW4lIHBpZHNfbmFfYXJyX2RlcCkNCmBgYA0KDQojIyMjIE5vdGVzIG9uIHRoaXM6DQpJdCBkb2VzIG5vdCBhcHBlYXIgdGhhdCB0aGUgcGVvcGxlIGluIGBwbF9uYWAgYXJlIGRpZmZlcmVudCBpbiBhIG5vdGljZWFibGUgd2F5IGZyb20gYW55b25lIGVsc2UgaW4gdGVybXMgb2YgdGhlIHByZXNlbmNlIG9mIGFycml2YWwgYW5kIGRlcGFydHVyZSB0aW1lcy4gQWxsIG9mIHRoZWlyIFBMQU5PID09IDEgaGF2ZSBhbiBBUlJUTSA9IE5BLiBJIHdpbGwgbm93IGNoZWNrIHdoZXRoZXIgdGhhdCBpcyB0cnVlIGZvciB0aGUgcmVzdCBvZiB0aGUgc2FtcGxlDQoNCmBgYHtyfQ0KcGwxIDwtIHBsYWNlICU+JSBmaWx0ZXIoUExBTk8gPT0gMSkgJT4lIHNlbGVjdChwaWQsIFBMQU5PLCBBUlJfSFIsIEFSUl9NSU4sIEFSUlRNKQ0KcGwxJEFSUlRNICU+JSB1bmlxdWUNCg0KDQpwbF9uYSAlPiUgZmlsdGVyKFBMQU5PID09IDEpICU+JSBzZWxlY3QocGlkLCBQTEFOTywgQVJSX0hSLCBBUlJfTUlOLCBBUlJUTSkgJT4lIC4kQVJSVE0gJT4lIHVuaXF1ZSAlPiUgVmlldw0KYGBgDQoNCg0KIyMgV0hPIGlzIGluIGBwbF9uYWANCg0KSGVyZSBpcyB3aGF0IHdlIGhhdmUgZmlndXJlZCBvdXQ6DQoNCiogQWxsIG9mIHRoZSBwZW9wbGUgd2hvc2UgUExBTk8gYXJyaXZhbCB0aW1lIGlzIE5PVCBuYSBhcmUgaW5jbHVkZWQgaW4gYHBsX25hYC4NCg0KDQoNCg0KIyMgTG9vayBhdCB0aGUgY29kZSBpdHNlbGYNCg0KDQojIGNoZWNrIGZvciBzdGFydC9lbmQgdGltZSBjb25zaXN0ZW5jeQ0KDQojIGludmVzdGlnYXRlIHRvIG1ha2Ugc3VyZSBhbGwgc3RhcnQgYXQgdGltZSAxLCBlbmQgYXQgdGltZSAxNDM5IHZzIDE0NDANCg0KIyBOQSdTIGluIHRoZSBtaWRkbGU/DQoNCg0K</div>
 
 
 

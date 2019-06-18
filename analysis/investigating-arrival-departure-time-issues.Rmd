@@ -3,14 +3,14 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-# FORNOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further
+FOR NOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further
 
 
 
 
 # also need to investigate the NA's:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(here)
 ```
@@ -22,16 +22,51 @@ travel_dat <- read_rds(here("data", "places_travel-added.rds"))
 
 ## Look at who has the arrival and departure times as NA
 
-Extract the pid's where arrival and departure times are NA
+Extract the pid's where any time value is NA
 ```{r}
-pids_na_arr_dep <- travel_dat %>% gather(key = "key", value = "value", -pid) %>% 
-  filter(is.na(value)) %>% .$pid %>% unique
+pids_na_arr_dep <- travel_dat %>% 
+  select(pid, arr_time3_add1, dep_time3_add1) %>%
+  gather(key = "key", value = "value", -pid) %>% 
+  filter(is.na(value)) %>% 
+  .$pid %>% unique
 ```
 
-Read the raw CHTS files
-```{r}
 
+
+
+Read the raw CHTS files, extract place file
+```{r}
+chts <- read_rds(here("data-raw", "chts_all_2019-05-22.rds"))
+place <- chts$PLACE
 ```
+
+Extract the rows with pids that have NA's for their arr/dep times
+```{r}
+library(magrittr)
+place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+
+pl_na <- place %>% filter(pid %in% pids_na_arr_dep)
+```
+
+#### Notes on this:
+It does not appear that the people in `pl_na` are different in a noticeable way from anyone else in terms of the presence of arrival and departure times. All of their PLANO == 1 have an ARRTM = NA. I will now check whether that is true for the rest of the sample
+
+```{r}
+pl1 <- place %>% filter(PLANO == 1) %>% select(pid, PLANO, ARR_HR, ARR_MIN, ARRTM)
+pl1$ARRTM %>% unique
+
+
+pl_na %>% filter(PLANO == 1) %>% select(pid, PLANO, ARR_HR, ARR_MIN, ARRTM) %>% .$ARRTM %>% unique %>% View
+```
+
+
+## WHO is in `pl_na`
+
+Here is what we have figured out:
+
+* All of the people whose PLANO arrival time is NOT na are included in `pl_na`.
+
+
 
 
 ## Look at the code itself
