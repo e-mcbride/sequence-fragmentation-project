@@ -225,15 +225,59 @@ pl_na$ARRTM %>% unique()
 
 
 # fix the ppl who didn't leave the house from SRBI
-they still have NA for their departure time.
+do they still have NA for their departure time? NOPE they're all good
 
 
+find them by saying: if plano == 1 and lastplace == T
 
-# fix the ppl who didn't leave the house from SRBI
-do they still have NA for their departure time?
+```{r}
+library(here);library(tidyverse)
+chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+place <- chts$PLACE
+library(magrittr)
+place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+# travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+```
+
+```{r}
+pl <- place %>% 
+  group_by(SAMPN, PERNO) %>% 
+  mutate(lastplace = (PLANO == max(PLANO))) %>% 
+  ungroup() %>% 
+  select(source, SAMPN, PERNO, PLANO, lastplace, ARR_HR, ARR_MIN, DEP_HR, DEP_MIN)
+```
+
+```{r}
+stayhome <- pl %>% filter(lastplace & PLANO == 1)
+```
+
+```{r}
+rm(stayhome, pl)
+```
+
 
 # check for start/end time consistency
+
+I will be using the "fixed" sample (made in `02_modify-place-file.R`) 
+
 Make sure all start at time 1, end at time 1439 vs 1440
+```{r}
+library(here);library(tidyverse)
+# chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+# place <- chts$PLACE
+library(magrittr)
+# place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+# travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+pl_mod <- read_rds(here("data","modified_pldat.rds")) 
+```
+
+
+# check that arrival times come before departure times
+
+
+# Total complete households vs with incomplete households, same for people after removing the bad guys in both ways
+Both ways means removing whole households vs not removing whole households
+
 
 
 # WHO is in `pl_na`
