@@ -9,7 +9,7 @@ places_dat <- read_rds(here("data","places_county-selection.rds"))
 #' # Also Making the overall id variable, a shortened placetype variable, and recoding the already-included travel as "loop" and "transfer" since those were wrongly placed in the "Other" category.
 
 
-places_mod <- places_dat %>% 
+pl_mod <- places_dat %>% 
   mutate(
     pid =            as.numeric(str_c(SAMPN, PERNO)),
     pltype =         recode(place_type, Other = "O", Home = "H", Work = "W", School = "S"), 
@@ -22,6 +22,22 @@ places_mod <- places_dat %>%
                              true = "Loop",
                              false = activity_type)) %>% 
   data.frame()
+
+
+# Removing the people with NA's for their arrival/departure times
+pids_na_arr_dep <- pl_mod %>% 
+  ungroup() %>% 
+  select(pid, arr_time3_add1, dep_time3_add1) %>%
+  gather(key = "key", value = "value", -pid) %>% 
+  filter(is.na(value)) %>% 
+  .$pid %>% unique
+
+hids_na_arr_dep <- pids_na_arr_dep %>% str_sub(end = -2) %>% as.numeric
+
+places_mod <- pl_mod %>% filter(!(SAMPN %in% hids_na_arr_dep)) %>% ungroup()
+
+# places_mod <- pl_mod %>% filter(!(pid %in% pids_na_arr_dep)) #for only removing person records
+
 
 places_mod %>% readr::write_rds(here("data","modified_pldat.rds"))
 
