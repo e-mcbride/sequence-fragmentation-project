@@ -8,7 +8,9 @@ editor_options:
 FOR NOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further
 
 
-
+```{r}
+travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+```
 
 # investigate the NA's:
 
@@ -262,17 +264,81 @@ I will be using the "fixed" sample (made in `02_modify-place-file.R`)
 
 Make sure all start at time 1, end at time 1439 vs 1440
 ```{r}
-library(here);library(tidyverse)
+library(here);library(magrittr);library(tidyverse)
 # chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
 # place <- chts$PLACE
-library(magrittr)
+
 # place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
 # travel_dat <- read_rds(here("data", "places_travel-added.rds"))
 pl_mod <- read_rds(here("data","modified_pldat.rds")) 
 ```
 
+```{r}
+startendtimes <- pl_mod %>% 
+  group_by(SAMPN, PERNO) %>% 
+  mutate(firstplace = PLANO == min(PLANO),
+         lastplace = PLANO == max(PLANO)) %>% 
+  ungroup() %>% 
+  select(source, pid, SAMPN, PERNO, PLANO, arr_time3_add1, dep_time3_add1, firstplace, lastplace)
+
+place1_timenot1 <- startendtimes %>% filter(PLANO == 1 & arr_time3_add1 > 1)
+
+```
+
+```{r}
+pid_plano1_badarr <- place1_timenot1$pid %>% unique()
+```
+
+
+Do the travel rows add the missing info?
+```{r}
+travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+
+x <- travel_dat %>% filter(pid %in% pid_plano1_badarr)
+```
+NO it does not. it starts from the next place.
+
+
+Are the last place times 1440?
+```{r}
+lastpl_timenot1440 <- startendtimes %>% filter(lastplace & dep_time3_add1 < 1438)
+pid_plano1_baddep <- lastpl_timenot1440$pid %>% unique
+```
+THERE ARE 89 PEOPLE WITH DEPARTURE TIMES EARLIER THAN 1439
+
+Do the travel rows add the missing departure info?
+```{r}
+y <- travel_dat %>% filter(pid %in% pid_plano1_badarr) %>% arrange(pid, dep_time3_add1)
+```
+NO it does not.
 
 # check that arrival times come before departure times
+
+```{r}
+library(here);library(magrittr);library(tidyverse)
+# chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+# place <- chts$PLACE
+
+# place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+# travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+pl_mod <- read_rds(here("data","modified_pldat.rds")) 
+```
+
+```{r}
+badsequences <- pl_mod %>% 
+  mutate(badseq = dep_time3_add1 - arr_time3_add1) %>% 
+  select(source,pid, PLANO, arr_time3_add1, dep_time3_add1, badseq) %>% 
+  filter(badseq < 1) 
+
+badseq_pid <-  badsequences %>%  .$pid %>% unique()
+
+```
+
+Are zero's ok? I think it has to be at least 1?
+
+902 with zeros or negative. could it be my fault? Check the activity file processing
+
+compare my current arrival times to the arrival times from the activity file. make sure they match up
 
 
 # Total complete households vs with incomplete households, same for people after removing the bad guys in both ways
@@ -292,3 +358,11 @@ Here is what I have figured out:
 * after fixing the issues with the timing variables from SRBI, we have 985 pids left who have na's in their arrival/departure times
 * 809 respondents from SRBI said "refused" or "don't know" for at least 1 of the time responses for a place they went/activity they did 
 * People who said "did not leave location" 
+
+
+* after removing the 985 people:
+* THERE ARE 19 PEOPLE with place ==1 but start time is NOT 1. Missing time (all from srbi)
+* THERE ARE 89 PEOPLE WITH DEPARTURE TIMES EARLIER THAN 1439
+
+* manual removal pids:
+  + 1275701 (arrival times are not before departure times)
