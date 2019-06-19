@@ -38,7 +38,8 @@ pids_na_arr_dep <- travel_dat %>%
 
 Read the raw CHTS files, extract place file
 ```{r}
-chts <- read_rds(here("data-raw", "chts_all_2019-05-22.rds"))
+# chts <- read_rds(here("data-raw", "chts_all_2019-05-22.rds"))
+chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
 place <- chts$PLACE
 ```
 
@@ -47,7 +48,8 @@ Extract the rows with pids that have NA's for their arr/dep times
 library(magrittr)
 place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
 
-pl_na <- place %>% filter(pid %in% pids_na_arr_dep)
+pl_na <- place %>% filter(pid %in% pids_na_arr_dep) %>% select(source, pid, PLANO, ARR_HR, ARR_MIN, DEP_HR, DEP_MIN, ARRTM, DEPTM)
+
 ```
 
 
@@ -189,8 +191,31 @@ srbi_arr_dep_times <- srbi_act %>%
 
 # make sure all start at time 1, end at time 1439 vs 1440
 
-# NA'S in the middle?
 
+
+# NA'S in the middle?
+```{r}
+x <- pl_na %>% filter(#ARRTM == "Refused" | 
+                        #ARRTM == "Don�t know"| 
+                        #DEPTM == "Refused" | 
+                        #DEPTM == "Don�t know"| 
+                        DEPTM == "Did not leave location") %>% 
+  .$pid %>% 
+  unique()
+pl_na %>% filter(pid %in% x) %>% View
+
+z <- pl_na %>% mutate(badguy = ARRTM == "Refused"| ARRTM == "Don�t know")
+
+
+```
+
+```{r}
+pl_na$ARRTM %>% unique()
+```
+
+
+# fix the ppl who didn't leave the house from SRBI
+they still have NA for their departure time.
 
 
 
@@ -202,3 +227,7 @@ Here is what I have figured out:
 * Apparently, the arrival/departure times should NOT be NA'S. They should be 0's.
 * There are 8080 in srbi, 109113 in nustats. And there are 8061 from srbi in the place file (the exact amount from srbi that are in the NA's)
 
+
+* after fixing the issues with the timing variables from SRBI, we have 985 pids left who have na's in their arrival/departure times
+* 809 respondents from SRBI said "refused" or "don't know" for at least 1 of the time responses for a place they went/activity they did 
+* People who said "did not leave location" 
