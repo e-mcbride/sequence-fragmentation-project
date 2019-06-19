@@ -74,4 +74,69 @@ chts$ACTIVITY <- act.new
 
 chts$ACTIVITY$APURP %>% unique() %>% View()
 
-write_rds(chts,"data/chts_all_2019-05-22.rds")
+write_rds(chts,here("data-raw","chts_all_2019-05-22.rds"))
+
+
+#####
+# Fixing the missing arrival/departure times from SRBI 
+#####
+library(tidyverse); library(here)
+
+chts <- read_rds(here("data-raw","chts_all_2019-05-22.rds"))
+place <- chts$PLACE
+activity <- chts$ACTIVITY
+
+# srbi_place <- place %>% filter(source == "SRBI")
+srbi_act <- activity %>% filter(source == "SRBI")
+
+srbi_arr_dep_times <- srbi_act %>% 
+  select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% 
+  distinct() %>% 
+  group_by(SAMPN, PERNO) %>% 
+  mutate(lastplace = PLANO == max(PLANO)) %>% 
+  ungroup() %>% 
+  
+  mutate(ARRTM = ARRTM/60, DEPTM = DEPTM/60) %>% 
+  
+  mutate(arr_srbi   = case_when(!is.na(ARRTM)             ~ ARRTM,
+                                PLANO == 1 & is.na(ARRTM) ~ 180),
+         dep_srbi = case_when(!is.na(DEPTM)             ~ DEPTM,
+                              # lastplace & is.na(DEPTM)  ~ 179)) %>%
+                              lastplace & is.na(DEPTM)  ~ 1619)) %>%
+
+  mutate(arr_hr_srbi  = if_else(condition = (arr_srbi %/% 60) > 24, # change to match nustats
+                                true      = (arr_srbi %/% 60)-24, 
+                                false     =(arr_srbi %/% 60)),
+         arr_min_srbi = arr_srbi %% 60,
+         # dep_hr_srbi  = dep_srbi %/% 60,
+         dep_hr_srbi  = if_else(condition = (dep_srbi %/% 60) > 24, # change to match nustats
+                                true      = (dep_srbi %/% 60)-24, 
+                                false     =(dep_srbi %/% 60)),
+         dep_min_srbi = dep_srbi %% 60) %>%
+  
+  mutate_at(vars(ends_with("_srbi")), as.integer) %>% 
+  
+  select(SAMPN, PERNO, PLANO, arr_hr_srbi, arr_min_srbi, dep_hr_srbi, dep_min_srbi)
+
+
+place_timefix <- place %>% left_join(srbi_arr_dep_times, by = c("SAMPN", "PERNO", "PLANO")) %>% ungroup()
+
+plnew <- place_timefix %>% 
+  mutate(arr_h  = case_when(source == "SRBI"    ~ arr_hr_srbi,
+                            source == "NuStats" ~ ARR_HR),
+         arr_m = case_when(source == "SRBI"    ~ arr_min_srbi,
+                           source == "NuStats" ~ ARR_MIN),
+         dep_h = case_when(source == "SRBI"    ~ dep_hr_srbi,
+                           source == "NuStats" ~ DEP_HR),
+         dep_m = case_when(source == "SRBI"    ~ dep_min_srbi,
+                           source == "NuStats" ~ DEP_MIN)) %>% 
+  select(-ARR_HR, -ARR_MIN, -DEP_HR, -DEP_MIN, -arr_hr_srbi, -arr_min_srbi, -dep_hr_srbi, -dep_min_srbi) %>%
+  rename(ARR_HR  = arr_h,
+         ARR_MIN = arr_m,
+         DEP_HR = dep_h,
+         DEP_MIN = dep_m)
+
+chts$PLACE <- plnew
+
+write_rds(chts,here("data-raw","chts_all_2019-06-18.rds"))
+
