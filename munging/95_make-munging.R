@@ -8,6 +8,10 @@ if (!dir_exists(here("figs"))) {
   dir_create(here("figs"))
 }
 
+if (!dir_exists(here("munging"))) {
+  dir_create(here("munging"))
+}
+
 #####
 # First: input what you want the counties to be
 #####
@@ -20,16 +24,16 @@ library(here);library(tidyverse); library(janitor)
 
 chts_all <- readr::read_rds(here("data-raw", "chts_all_2019-06-18.rds"))
 
-#' Pull the counties you want:
-params = list()
-params$counties <- "SANTA BARBARA, SAN LUIS OBISPO"
-# params$counties <- chts_all$HOUSEHOLD %>% distinct(CTFIP)
+#' This is where you would pull the counties you want:
+
 
 counties <- chts_all$HOUSEHOLD %>% 
   distinct(CTFIP) %>% 
   .$CTFIP
 
-
+# params = list()
+# params$counties <- "SANTA BARBARA, SAN LUIS OBISPO"
+# params$counties <- chts_all$HOUSEHOLD %>% distinct(CTFIP)
 # counties <- params$counties %>% 
 #   str_split(pattern=',',simplify=T) %>%
 #   str_trim() %>% 
@@ -42,9 +46,6 @@ rel_hhids <- chts_all$HOUSEHOLD %>%
 
 # x <- chts_all$HOUSEHOLD %>% distinct(SAMPN) # testing to make sure the line above captured everyone and it did
 
-
-#' rel_hhids %>% write_rds(here("data", "chts-hhids_slo-sb.rds"))
-#' 
 
 #' Remove empty columns from all the CHTS tables:
 chts_rel <- chts_all %>%
@@ -67,5 +68,5 @@ source(here("munging", "01_06_pr-hh-pl-vars.R"))
 # WARNING: ONLY RUN THE FOLLOWING AFTER YOU HAVE FIXED 04 AND 05: (trying it without 5)
 source(here("munging","01_95_make-place-file.R"))
 
-source(here("R","02_modify-place-file.R"))
-source(here("R","03_01_adding-travel-rows.R")) # FLAGGED FOR POTENTIAL ISSUES CAUSED
+source(here("munging","02_modify-place-file.R"))
+source(here("munging","03_01_adding-travel-rows.R")) # FLAGGED FOR POTENTIAL ISSUES CAUSED
