@@ -98,7 +98,7 @@ locs_place_cat <- locs_rel_matched %>%
          any_school = any(place_type == 'School'),
          any_other  = any(place_type == 'Other')) %>% 
   ungroup() %>%
-  select(SAMPN,PERNO,PLANO,place_type,any_work:any_other)
+  select(source, SAMPN,PERNO,PLANO,place_type,any_work:any_other)
 
 locs_place_cat %>% write_rds(here("data", "locations-place-cat_places.rds"))
 
