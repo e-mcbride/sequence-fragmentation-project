@@ -190,6 +190,8 @@ srbi_arr_dep_times <- srbi_act %>%
 
 
 
+
+
 # NA'S in the middle?
 ```{r}
 x <- pl_na %>% filter(#ARRTM == "Refused" | 
@@ -201,6 +203,7 @@ x <- pl_na %>% filter(#ARRTM == "Refused" |
   unique()
 pl_na %>% filter(pid %in% x) %>% View
 
+
 z <- pl_na %>% mutate(badguy = ARRTM == "Refused"| ARRTM == "Don�t know")
 
 
@@ -209,6 +212,21 @@ z <- pl_na %>% mutate(badguy = ARRTM == "Refused"| ARRTM == "Don�t know")
 ```{r}
 pl_na$ARRTM %>% unique()
 ```
+
+```{r}
+z <- pl_na %>% mutate(badguy = ARRTM == "Refused"| ARRTM == "Don�t know")
+
+
+```
+
+```{r}
+pl_na$ARRTM %>% unique()
+```
+
+
+# fix the ppl who didn't leave the house from SRBI
+they still have NA for their departure time.
+
 
 
 # fix the ppl who didn't leave the house from SRBI
