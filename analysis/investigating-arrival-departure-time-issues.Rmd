@@ -10,7 +10,7 @@ FOR NOW: I will run an analysis excluding these people as an experiment to see h
 
 
 
-# also need to investigate the NA's:
+# investigate the NA's:
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -165,15 +165,20 @@ srbi_act <- activity %>% filter(source == "SRBI")
 ```
 
 ```{r}
-srbi_act %>% select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% distinct() %>% 
-  View
+srbi_arr_dep_times <- srbi_act %>% select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% distinct()
 ```
 
 
 What I need to do: 
 Get arrival/departure times from activity file from SRBI, divide by 60 to get the numbers we need, put that into the time-in-min-since-3am file. Could do an if/else statement.
 ```{r}
-
+srbi_arr_dep_times <- srbi_act %>% 
+  select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% 
+  distinct() %>% 
+  mutate(arr_hr = ARRTM%/%3600,
+         arr_min = (ARRTM/60)%%60,
+         dep_hr = DEPTM%/%3600,
+         dep_min = (DEPTM/60)%%60)
 ```
 
 
