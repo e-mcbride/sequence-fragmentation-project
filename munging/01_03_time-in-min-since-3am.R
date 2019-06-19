@@ -1,3 +1,5 @@
+# 01_03_time-in-min-since-3am.R
+
 library(tidyverse); library(here)
 
 ##' Crunch arrival/departure times to calculate stay duration
@@ -13,7 +15,7 @@ get_time_nust_Acts <- function(time_col) {
   60*lubridate::hour(times) + lubridate::minute(times)
 }
 
-# converts a time in minutes since midnight to one in minutes since 3AM
+# converts a time in minutes since midnight to time in minutes since 3AM
 convert_time_3A <- function(ext_time_col) {
   t3 = ext_time_col - 180
   if_else(t3 < 0, t3 + 24*60, t3)
