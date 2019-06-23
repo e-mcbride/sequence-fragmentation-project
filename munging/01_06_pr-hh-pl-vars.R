@@ -8,7 +8,7 @@ library(here); library(tidyverse)
 
 # place_chars_other <- 
 chts_rel$PLACE %>%
-  select(SAMPN,PERNO,PLANO,PLAT=LAT,PLON=LON,MODE,TRIPDUR,PNAME:ZIP) %>% 
+  select(SAMPN,PERNO,PLANO,PLAT=LAT,PLON=LON,MODE,TRIPDUR,PTYPE,PNAME:ZIP) %>% 
   readr::write_rds(here("data", "pl-vars_places.rds"))
 
 ## Extract relevant person-level fields
