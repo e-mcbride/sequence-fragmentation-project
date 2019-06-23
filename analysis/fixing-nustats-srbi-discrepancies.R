@@ -80,30 +80,37 @@ write_rds(chts,here("data-raw","chts_all_2019-05-22.rds"))
 #####
 # Fixing the missing arrival/departure times from SRBI 
 #####
-library(tidyverse); library(here)
+library(tidyverse); library(lubridate);library(here)
 
-chts <- read_rds(here("data-raw","chts_all_2019-05-22.rds"))
-place <- chts$PLACE
-activity <- chts$ACTIVITY
+chts <- read_rds(here::here("data-raw","chts_all_2019-05-22.rds"))
+# place <- chts$PLACE
+
+#' Try reading in the place file by itself instead of from the new chts one to make sure it's legit
+place <- readr::read_rds(here::here("data-raw", "CHTS_PLACE_2018-03-05.rds"))
+
+# activity <- chts$ACTIVITY
 
 # srbi_place <- place %>% filter(source == "SRBI")
-srbi_act <- activity %>% filter(source == "SRBI")
+# srbi_act <- activity %>% filter(source == "SRBI")
 
-srbi_arr_dep_times <- srbi_act %>% 
-  select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% 
-  distinct() %>% 
+plsrbi <- place %>% select(source, SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% filter(source == "SRBI")
+
+
+converttime <- plsrbi %>% 
+  mutate(arr_min = (hm(ARRTM) %>% as.numeric())/60,
+         dep_min = (hm(DEPTM) %>% as.numeric())/60)
+
+
+srbi_arr_dep_times <- converttime %>% 
   group_by(SAMPN, PERNO) %>% 
   mutate(lastplace = PLANO == max(PLANO)) %>% 
-  ungroup() %>% 
+  ungroup() %>%
+  mutate(arr_srbi   = case_when(!is.na(arr_min)             ~ arr_min,
+                                PLANO == 1 & is.na(arr_min) ~ 180),
+         dep_srbi = case_when(!is.na(dep_min)             ~ dep_min,
+                              # lastplace & is.na(dep_min)  ~ 179)) %>%
+                              lastplace & is.na(dep_min)  ~ 1619)) %>%
   
-  mutate(ARRTM = ARRTM/60, DEPTM = DEPTM/60) %>% 
-  
-  mutate(arr_srbi   = case_when(!is.na(ARRTM)             ~ ARRTM,
-                                PLANO == 1 & is.na(ARRTM) ~ 180),
-         dep_srbi = case_when(!is.na(DEPTM)             ~ DEPTM,
-                              # lastplace & is.na(DEPTM)  ~ 179)) %>%
-                              lastplace & is.na(DEPTM)  ~ 1619)) %>%
-
   mutate(arr_hr_srbi  = if_else(condition = (arr_srbi %/% 60) > 24, # change to match nustats
                                 true      = (arr_srbi %/% 60)-24, 
                                 false     =(arr_srbi %/% 60)),
@@ -138,5 +145,11 @@ plnew <- place_timefix %>%
 
 chts$PLACE <- plnew
 
-write_rds(chts,here("data-raw","chts_all_2019-06-18.rds"))
+write_rds(chts,path = here::here("data-raw","chts_all_2019-06-18.rds"))
+
+
+#####
+# PNAME is not what it's called for SRBI
+#####
+
 
