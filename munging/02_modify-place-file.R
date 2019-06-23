@@ -24,15 +24,17 @@ pl_mod <- places_dat %>%
   data.frame()
 
 
-# Removing the people with NA's for their arrival/departure times
-pids_na_arr_dep <- pl_mod %>% 
-  ungroup() %>% 
+
+
+#' Removing the people with NA's for their arrival/departure times (we will no longer be doing this immediately)
+pids_na_arr_dep <- pl_mod %>%
+  ungroup() %>%
   select(pid, arr_time3_add1, dep_time3_add1) %>%
-  gather(key = "key", value = "value", -pid) %>% 
-  filter(is.na(value)) %>% 
+  gather(key = "key", value = "value", -pid) %>%
+  filter(is.na(value)) %>%
   .$pid %>% unique
 
-hids_na_arr_dep <- pids_na_arr_dep %>% str_sub(end = -2) %>% as.numeric
+hids_na_arr_dep <- pids_na_arr_dep %>% str_sub(end = -2) %>% as.numeric %>% unique()
 
 places_mod <- pl_mod %>% filter(!(SAMPN %in% hids_na_arr_dep)) %>% ungroup()
 
