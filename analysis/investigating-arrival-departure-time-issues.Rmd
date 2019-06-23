@@ -9,7 +9,7 @@ FOR NOW: I will run an analysis excluding these people as an experiment to see h
 
 
 ```{r}
-travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+travel_dat <- read_rds(here::here("data", "places_travel-added.rds"))
 ```
 
 # investigate the NA's:
@@ -20,7 +20,7 @@ library(here)
 ```
 
 ```{r}
-travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+travel_dat <- read_rds(here::here("data", "places_travel-added.rds"))
 ```
 
 
@@ -195,6 +195,7 @@ srbi_arr_dep_times <- srbi_act %>%
 
 
 # NA'S in the middle?
+
 ```{r}
 x <- pl_na %>% filter(#ARRTM == "Refused" | 
                         #ARRTM == "Don�t know"| 
@@ -262,7 +263,7 @@ rm(stayhome, pl)
 
 I will be using the "fixed" sample (made in `02_modify-place-file.R`) 
 
-Make sure all start at time 1, end at time 1439 vs 1440
+### Make sure all start at time 1, end at time 1439 vs 1440
 ```{r}
 library(here);library(magrittr);library(tidyverse)
 # chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
@@ -337,9 +338,6 @@ badseq_pid <-  badsequences %>%  .$pid %>% unique()
 Are zero's ok? I think it has to be at least 1?
 
 902 with zeros or negative. could it be my fault? Check the activity file processing
-
-compare my current arrival times to the arrival times from the activity file. make sure they match up
-
 
 # Total complete households vs with incomplete households, same for people after removing the bad guys in both ways
 Both ways means removing whole households vs not removing whole households
