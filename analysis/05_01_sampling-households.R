@@ -1,6 +1,6 @@
 # sampling
 
-library(tidyverse)
+library(tidyverse); library(here)
 
 #' 1. get the final result that goes into the sequence analysis (b/c it contains the final sample used)
 pl_seq <- read_rds(here::here("results","place_sequence.rds")) %>% 
@@ -12,6 +12,7 @@ hhids <- pl_seq %>%
   transmute(SAMPN = str_sub(pid, end = -2)) %>% 
   distinct 
 
+
 #' 3. Pick a random sample from it
 hhid_samp <- hhids %>% 
   sample_n(size = 15000, replace = FALSE) %>% 
@@ -20,6 +21,18 @@ hhid_samp <- hhids %>%
 #' 4. write the sample list
 hhid_samp %>% readr::write_rds(here("data","sample-hhids-15000.rds"))
 
+
+##### 
+# smaller sample
+#####
+
+#' 3. Pick a random sample from it
+hhid_samp <- hhids %>% 
+  sample_n(size = 5000, replace = FALSE) %>% 
+  .$SAMPN
+
+#' 4. write the sample list
+hhid_samp %>% readr::write_rds(here("data","sample-hhids-05000.rds"))
 
 
 
