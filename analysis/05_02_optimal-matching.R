@@ -2,9 +2,10 @@
 library(tidyverse);library(here)
 library(TraMineR)
 
-pl.seq <- read_rds(here("results","place_sequence.rds"))
+seq_samp05 <- readr::read_rds(here("data","seq-samp-05000.rds"))
 
-couts <- TraMineR::seqsubm(pl.seq, method = "TRATE", with.missing = TRUE) # took about 60 seconds
+
+couts <- TraMineR::seqsubm(seq_samp05, method = "TRATE", with.missing = TRUE) # took about 60 seconds
 round(couts, 2)
 #      H->  O-> S->  T->  W-> *->
 # H-> 0.00 2.00   2 1.98 2.00   2
@@ -16,8 +17,8 @@ round(couts, 2)
 
 gc()
 
-pl.om <- TraMineR::seqdist(pl.seq, method = "OM", indel = 3, sm = couts, with.missing = TRUE)
+pl_om <- TraMineR::seqdist(seq_samp05, method = "OM", indel = 3, sm = couts, with.missing = TRUE)
 
-write_rds(pl.om, here("data", "sequences-optimal-matching.rds"))
+write_rds(pl_om, here("data", "sequences-optimal-matching.rds"))
 
 
