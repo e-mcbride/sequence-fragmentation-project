@@ -42,7 +42,7 @@ cluster <- cutree(clusterward, k = 9) %>%
 # 
 alldata <- cbind(samp_grp, cluster)
 
-write_rds(alldata, here("data","alldata.rds"))
+readr::write_rds(alldata, here::here("data","alldata.rds"))
 
 
 #' Below is where I tested the different number of clusters by changing everywhere it says `10` to change the number of clusters
