@@ -9,7 +9,7 @@ places <- read_rds(here("data","modified_pldat.rds"))
 # pulling variables of interest from person data that were not already joined to the place data
 chts_sel <- chts$PERSON %>%
   mutate(pid = as.numeric(str_c(SAMPN, PERNO))) %>%
-  select(source, pid, SAMPN, PERNO, HISP, RACE, NTVTY, DISAB, DTYPE, GEND, AGE)
+  select(source, pid, SAMPN, PERNO, HISP, RACE, NTVTY, DISAB, DTYPE, GEND, AGE,EMPLY,STUDE,LIC,EDUCA)
 
 
 
