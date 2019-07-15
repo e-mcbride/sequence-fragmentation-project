@@ -70,17 +70,6 @@ alldata$male <- ifelse(is.na(alldata$male), 0, alldata$male)
 alldata$maleworker =  alldata$male * alldata$worker
 
 
-level_key <- list(`Type 1` = "Home Day",
-                  `Type 2` = "School Day",
-                  `Type 3` = "Typical Work Day",
-                  `Type 4` = "Errands Type 1",
-                  `Type 5` = "Mostly Out of Home",
-                  `Type 6` = "Errands Type 2",
-                  `Type 7` = "Non-typical Work Day",
-                  `Type 8` = "Leave Home",
-                  `Type 9` = "Traveling")
-
-
 #####
 # Attaching the LPA LU group variable to CHTS home locations 
 #####
@@ -116,10 +105,6 @@ CHTS_LUgrp <- LU_home@data %>% select(source, SAMPN, GEOID, LPAgrp)
 
 CHTS_LUgrp %>% readr::write_rds(here::here("data", "lpa-LU-grps_chts-srbi-nust.rds"))
 
-#####
-
-
-
 
 #####
 
@@ -128,7 +113,6 @@ pr_dat <- alldata %>%
   mutate(pid, Age04_15, Und04, Und16 = Age04_15 + Und04) %>% 
   mutate(i = 1) %>% 
   spread(pov_lvl, i, fill = 0, sep = ".") %>% ungroup() %>% 
-  mutate(namedcluster = recode_factor(cluster, !!!level_key)) %>% 
   left_join(CHTS_LUgrp, by = c("source", "SAMPN"))
 
 
