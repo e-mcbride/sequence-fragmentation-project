@@ -20,6 +20,7 @@ chts_sel <- chts$PERSON %>%
 
 
 Agegrp_count <- chts_sel %>%
+  mutate(AGE = as.numeric(AGE)) %>% 
   mutate(AgeGrp = case_when(AGE < 4 ~ "Und04",
                             AGE >= 4 & AGE < 16 ~ "Age04-15",
                             AGE >= 16 & AGE < 19 ~ "Age16-18",
