@@ -1,7 +1,8 @@
 # This is where we build the data with the desired number of clusters to examine
 
-library(tidyverse); library(TraMineR)
-library(here)
+library(tidyverse);library(here)
+library(TraMineR)
+
 library(summarytools)
 
 
