@@ -41,7 +41,17 @@ cluster <- cutree(clusterward, k = 9) %>%
 
 
 # 
-alldata <- cbind(samp_grp, cluster)
+level_key <- list(`Type 1` = "Home Day",
+                  `Type 2` = "School Day",
+                  `Type 3` = "Typical Work Day",
+                  `Type 4` = "Errands Type 1",
+                  `Type 5` = "Mostly Out of Home",
+                  `Type 6` = "Errands Type 2",
+                  `Type 7` = "Non-typical Work Day",
+                  `Type 8` = "Leave Home",
+                  `Type 9` = "Traveling")
+
+alldata <- cbind(samp_grp, cluster) %>% mutate(namedcluster = recode_factor(cluster, !!!level_key))
 
 readr::write_rds(alldata, here::here("data","alldata.rds"))
 
