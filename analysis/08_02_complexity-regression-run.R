@@ -4,7 +4,7 @@
 # First model (without the business establishments added since those will take some time to get together)
 
 # library(censReg)
-library(tidyverse)
+library(tidyverse); library(here)
 library(stargazer)
 
 #library(sf)
@@ -22,19 +22,22 @@ lm.fxn <- function(cluster.name) {
        pov_lvl.low +
        weekend +
        # DOW + # **change to weekday?
-       AgeGrp +
-       #childbelow15 + 
-       #senior + 
-       # Und04 + 
+       # AgeGrp +
+       childbelow15 +
+       senior +
+       # Und04 +
        # Age04_15 +
        # Age16_18 +
+       age00_03.d +
+       age04_15.d +
+       age16_18.d +
        female + 
        worker + 
        student + 
        # driver +
-       #HHSIZ + 
-       HHVEH,
-     # LPAgrpfac + 
+       # HHSIZ + 
+       HHVEH +
+     LPAgrpfac,
      # avg_serv_ests_10km + 
      # max.kms.from.home,
      data = cluster.name)
@@ -97,6 +100,7 @@ lin.mods <- set_names(linear$models, nm = linear$namedcluster)
 
 lin.mods %>% stargazer(type = "text",
                        dep.var.caption = "Cluster Type", 
+                       digits = 2,
                        column.labels = names(.),
                        report = "vct*",
                        intercept.bottom = FALSE,
@@ -104,7 +108,7 @@ lin.mods %>% stargazer(type = "text",
                        single.row = TRUE,
                        align = TRUE,
                        model.numbers = FALSE,
-                       out="figs/cluster-lms.htm")
+                       out="figs/cluster-lms-lpalu.htm")
 
 #####
 # stuff that didnt work out
