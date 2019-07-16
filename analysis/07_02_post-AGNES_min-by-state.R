@@ -1,6 +1,6 @@
 # Minutes spent in each state: prepping for travel time ratio
 
-library(tidyverse)
+library(tidyverse); library(here)
 
 seq_samp <- readr::read_rds(here::here("data", "sample-seq-05000.rds"))
 
@@ -15,7 +15,7 @@ min_by_state <- seq_samp %>%
   mutate(min_at_nonhome_places = min_O + min_S + min_W)
 
 
-min_by_state %>% write_rds(here("data", "min-by-state.rds"))
+min_by_state %>% write_rds(here::here("data", "min-by-state.rds"))
 
 
 
