@@ -1,5 +1,5 @@
 library(tidyverse); library(here)
-# library(TraMineR)
+
 
 # Figure: Daily Sequences by Cluster 
 
