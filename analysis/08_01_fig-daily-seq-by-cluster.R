@@ -1,5 +1,6 @@
 library(tidyverse); library(here)
-library(TraMineR)
+# library(TraMineR)
+
 # Figure: Daily Sequences by Cluster 
 
 #####
@@ -7,7 +8,7 @@ library(TraMineR)
 #####
 
 pl_seq <- readr::read_rds(here("data","sample-seq-05000.rds"))
-alldata <- readr::read_rds(here::here("data","alldata.rds"))
+alldata <- readr::read_rds(here::here("data","pr-dat_for-lm.rds"))
 
 #' PREP DATA for making Figure 1 with ggplot.
 
