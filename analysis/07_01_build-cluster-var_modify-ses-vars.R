@@ -132,6 +132,10 @@ alldata$male <- ifelse(is.na(alldata$male), 0, alldata$male)
 alldata$maleworker =  alldata$male * alldata$worker
 
 
+alldata <- alldata %>% 
+  mutate(pid, Age04_15, Und04, Und16 = Age04_15 + Und04) %>% 
+  mutate(i = 1) %>% 
+  spread(pov_lvl, i, fill = 0, sep = ".") %>% ungroup() 
 
 
 
