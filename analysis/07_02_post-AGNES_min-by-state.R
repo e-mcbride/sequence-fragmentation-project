@@ -13,7 +13,8 @@ min_by_state <- seq_samp %>%
   ungroup() %>% 
   spread(key= place, value = "minutes", fill = 0) %>% 
   rename(min_H = "H", min_O = "O", min_S = "S", min_T = "T", min_W = "W") %>% 
-  mutate(min_at_nonhome_places = min_O + min_S + min_W)
+  mutate(min_outside_home = min_O + min_S + min_W + min_T,
+         ttr = min_T/min_outside_home)
 
 
 min_by_state %>% write_rds(here::here("data", "min-by-state.rds"))
