@@ -1,9 +1,9 @@
 # This is where we build the data with the desired number of clusters to examine
 
 library(tidyverse);library(here)
-library(TraMineR)
+# library(TraMineR)
 
-library(summarytools)
+# library(summarytools)
 
 
 # grouping variables
@@ -51,9 +51,9 @@ level_key <- list(`Type 1` = "Home Day",
                   `Type 8` = "Leave Home",
                   `Type 9` = "Traveling")
 
-alldata <- cbind(samp_grp, cluster) %>% mutate(namedcluster = recode_factor(cluster, !!!level_key))
+cluster_ses <- cbind(samp_grp, cluster) %>% mutate(namedcluster = recode_factor(cluster, !!!level_key))
 
-alldata %>% readr::write_rds(here::here("data","alldata.rds"))
+cluster_ses %>% readr::write_rds(here::here("data","cluster_ses.rds"))
 
 
 #' Below is where I tested the different number of clusters by changing everywhere it says `10` to change the number of clusters
