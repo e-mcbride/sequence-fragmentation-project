@@ -135,9 +135,14 @@ alldata$maleworker =  alldata$male * alldata$worker
 alldata <- alldata %>% 
   mutate(pid, Age04_15, Und04, Und16 = Age04_15 + Und04) %>% 
   mutate(i = 1) %>% 
-  spread(pov_lvl, i, fill = 0, sep = ".") %>% ungroup() 
-
-
+  spread(pov_lvl, i, fill = 0, sep = ".") %>% 
+  ungroup() %>% 
+  mutate(native = as.numeric(NTVTY == "Yes"),
+         hispanic = as.numeric(HISP == "YES"),
+         weekend = as.numeric(DOW == "Saturday" | DOW == "Sunday"),
+         age00_03.d = as.numeric(Und04>0),
+         age04_15.d = as.numeric(Age04_15>0), # flag for check
+         age16_18.d = as.numeric(Age16_18>0))
 
 #####
 
