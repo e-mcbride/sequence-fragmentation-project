@@ -28,7 +28,8 @@ LU_home <- point.in.poly(homePts_sp, LUPolys_sp)
 head(LU_home@data)
 
 
-CHTS_LUgrp <- LU_home@data %>% select(source, SAMPN, GEOID, LPAgrp)
+CHTS_LUgrp <- LU_home@data %>% select(source, SAMPN, GEOID, LPAgrp) %>% 
+  mutate(LPAgrpfac = factor(LPAgrp, levels = c(4,3,2,1), labels = c("urban", "suburban", "exurban", "rural")))
 
 
 CHTS_LUgrp %>% readr::write_rds(here::here("data", "lpa-LU-grps_chts-srbi-nust.rds"))
