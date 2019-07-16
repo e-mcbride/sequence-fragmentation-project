@@ -53,7 +53,7 @@ level_key <- list(`Type 1` = "Home Day",
 
 alldata <- cbind(samp_grp, cluster) %>% mutate(namedcluster = recode_factor(cluster, !!!level_key))
 
-readr::write_rds(alldata, here::here("data","alldata.rds"))
+alldata %>% readr::write_rds(here::here("data","alldata.rds"))
 
 
 #' Below is where I tested the different number of clusters by changing everywhere it says `10` to change the number of clusters
