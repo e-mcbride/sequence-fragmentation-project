@@ -6,6 +6,7 @@ seq_samp <- readr::read_rds(here::here("data", "sample-seq-05000.rds"))
 
 min_by_state <- seq_samp %>% 
   as_tibble(rownames = "pid") %>% 
+  mutate(pid = as.numeric(pid)) %>% 
   gather(-pid, key = "time", value = "place") %>% 
   group_by(pid, place) %>% 
   count(name = "minutes") %>% 
