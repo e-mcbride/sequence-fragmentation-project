@@ -133,7 +133,7 @@ pr_dat_dum <- pr_dat %>%
 
 
 
-write_rds(pr_dat_dum, here::here("data","pr-dat_for-lm.rds"))
+pr_dat_dum %>% write_rds(here::here("data","pr-dat_for-lm.rds"))
 
 
 
