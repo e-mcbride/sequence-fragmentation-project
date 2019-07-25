@@ -1,7 +1,7 @@
 library(tidyverse); library(here)
 
-chts <- read_rds(here("data", "original", "CHTS_all2018-03-05_.rds"))
-
+# chts <- read_rds(here("data", "original", "CHTS_all2018-03-05_.rds"))
+chts <- readr::read_rds(here::here("data-raw","chts_all_2019-06-18.rds"))
 place <- chts$PLACE
 
 #####
@@ -35,6 +35,8 @@ chts$PLACE$MODE %>% unique
 pl.new$MODE %>% unique
 
 place$MODE %>% unique
+
+chts %>% readr::write_rds(here::here("data-raw","chts_all_2019-06-18.rds"))
 
 
 #####
@@ -153,3 +155,22 @@ write_rds(chts,path = here::here("data-raw","chts_all_2019-06-18.rds"))
 #####
 
 
+#####
+# RELAT in person file
+#####
+library(tidyverse); library(here)
+chts <- readr::read_rds(here::here("data-raw","chts_all_2019-06-18.rds"))
+relat_xw <- readr::read_csv(here::here("data", "pr-xwalk-RELAT.csv"))
+pr <- chts$PERSON
+
+new_pr <- pr %>% 
+  # select(SAMPN, PERNO, RELAT) %>% 
+  left_join(relat_xw, by = "RELAT") %>% 
+  select(-RELAT, RELAT = new_relat) %>% 
+  select(source:GEND, RELAT, everything())
+
+new_pr$RELAT %>% unique
+
+chts$PERSON <- new_pr
+
+write_rds(chts,path = here::here("data-raw","chts_all_2019-06-18.rds"))
