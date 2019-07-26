@@ -15,4 +15,5 @@ pr_dat <-cluster_ses %>%
 # age.grp.f = factor(AgeGrp, ordered = FALSE, exclude = "Unknown"))
 
 
-write_rds(pr_dat, here::here("data","pr-dat_for-lm.rds"))
+pr_dat %>% write_rds(here::here("data","pr-dat_for-lm.rds"))
+# pr_dat <- read_rds(here::here("data","pr-dat_for-lm.rds"))
