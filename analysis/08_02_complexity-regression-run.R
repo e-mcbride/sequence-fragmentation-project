@@ -111,6 +111,23 @@ lin.mods %>% stargazer(type = "text",
                        out="figs/cluster-lms-lpalu.htm")
 
 #####
+covar_labs <- c("Constant","Disability", "Household Income Near or Below the Poverty Line", "Weekend", "Respondent is Under 15 Years Old", "Respondent is Over 65 Years Old", "Presence of Children Under 4", "Presence of Children Age 4 to 15", "Presence of Children Age 16 to 18", "Female", "Worker", "Student", "Number of Household Vehicles", "Suburban Household", "Exurban Household", "Rural Household")
+
+lin.mods %>% stargazer(type = "text",
+                       dep.var.caption = "Cluster Type", 
+                       digits = 2,
+                       column.labels = names(.),
+                       covariate.labels = covar_labs,
+                       report = "vct*",
+                       intercept.bottom = FALSE,
+                       # notes = lmnotes,
+                       single.row = TRUE,
+                       align = TRUE,
+                       model.numbers = FALSE,
+                       out="figs/cluster-lms-lpalu-test.htm")
+
+
+#####
 # stuff that didnt work out
 #####
 # lin.mods <- linear %>% 
