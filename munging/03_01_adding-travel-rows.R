@@ -1,6 +1,6 @@
-library(tidyverse); library(TraMineR); library(here)
+library(tidyverse); library(here)
 
-places_mod <- readr::read_rds(here("data","modified_pldat.rds"))
+# places_mod <- readr::read_rds(here("data","modified_pldat.rds"))
 
 # Data into nested format (nested by person ID)
 pl_nest <- places_mod %>% 
@@ -41,7 +41,9 @@ TravRows <- function(x) {
   for(i in 1:length(plno)){
     if(length(dep_time[i-1]!=0)){
       
-      PLANO[i] = paste(plno[i], "T", sep = "")
+      
+      
+      PLANO[i] = paste(plno[i-1], "T", sep = "") #change test
       arr_time3_add1[i] = dep_time[i-1]
       dep_time3_add1[i] = arr_time[i]
       pltype[i] = "T"
@@ -66,9 +68,15 @@ trav_added <- pl_nest %>% mutate(trav = map(data, TravRows))
 ## unnest to make into a tibble:
 travel_dat <- trav_added %>% 
   unnest(trav) %>% 
-  arrange(pid, dep_time3_add1)
+  arrange(pid, PLANO) %>% 
+  mutate(duration = dep_time3_add1 - arr_time3_add1,
+         bad = pltype == "T" & duration == 0) %>% 
+  filter(!bad) %>%
+  select(-duration, -bad)
+
 
 travel_dat %>% readr::write_rds(here("data", "places_travel-added.rds"))
 
+#if place type is travel and the duration is zero, remove the row
 
 

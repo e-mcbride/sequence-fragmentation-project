@@ -1,0 +1,366 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+FOR NOW: I will run an analysis excluding these people as an experiment to see how it goes. TOMORROW I will investigate who they are further
+
+
+```{r}
+travel_dat <- read_rds(here::here("data", "places_travel-added.rds"))
+```
+
+# investigate the NA's:
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+travel_dat <- read_rds(here::here("data", "places_travel-added.rds"))
+```
+
+
+## Look at who has the arrival and departure times as NA
+
+Extract the pid's where any time value is NA
+```{r}
+pids_na_arr_dep <- travel_dat %>% 
+  select(pid, arr_time3_add1, dep_time3_add1) %>%
+  gather(key = "key", value = "value", -pid) %>% 
+  filter(is.na(value)) %>% 
+  .$pid %>% unique
+```
+
+
+
+
+Read the raw CHTS files, extract place file
+```{r}
+# chts <- read_rds(here("data-raw", "chts_all_2019-05-22.rds"))
+chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+place <- chts$PLACE
+```
+
+Extract the rows with pids that have NA's for their arr/dep times
+```{r}
+library(magrittr)
+place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+
+pl_na <- place %>% filter(pid %in% pids_na_arr_dep) %>% select(source, pid, PLANO, ARR_HR, ARR_MIN, DEP_HR, DEP_MIN, ARRTM, DEPTM)
+
+```
+
+
+Below, checking to see what arrival/departure times exist for PLANO == 1 in whole sample, and comparing to arr/dep times in `pl_na`
+
+```{r}
+pl1 <- place %>% filter(PLANO == 1) %>% select(source,pid, PLANO, ARR_HR, ARR_MIN, ARRTM)
+
+pl1 %>%
+  filter(!is.na(ARRTM)) %>% 
+  .$ARRTM %>% 
+  # unique %>% 
+  View()
+
+pl1 %>%
+  filter(is.na(ARR_HR)) %>% 
+  # .$ARRTM %>% 
+  # unique %>% 
+  View()
+
+pl_na %>% filter(PLANO == 1) %>% 
+  # select(pid, PLANO, ARR_HR, ARR_MIN, ARRTM) %>% 
+  filter(!is.na(ARRTM)) %>% 
+  .$ARRTM %>% 
+  # unique %>% 
+  View
+
+```
+
+
+All the people whose PLANO == 1, but arrival time is NOT NA are included in `pl_na`.
+
+SRBI coded NA's for PLANO == 1, Nustats coded 3:00am for PLANO == 1. 
+
+HOWEVER, Many of their PLANO == 1 have an ARRTM = NA. (correct formatting). So who are those people and why did they get NA's? I may need to move on to looking at the code itself for a bit. 
+
+
+qUICK Question: how many people (unique pids) srbi vs nustats?
+```{r}
+per <- chts$PERSON
+per %>% group_by(source) %>% count
+```
+
+There are 8080 in srbi, 109113 in nustats. And there are 8061 from srbi in the place file (the exact amount from srbi that are in the NA's)
+
+How many of the na pids are from each?
+```{r}
+per %>% mutate(pid = str_c(SAMPN, PERNO)) %>% 
+  filter(pid %in% pids_na_arr_dep) %>% 
+  group_by(source) %>% count
+```
+ONLY 1 FROM NUSTATS, AND 8061 FROM SRBI.
+WARNING: THIS MEANS I NEED TO LOOK AT THE START TIMES
+
+who is the 1 from nustats:
+```{r}
+place %>%
+  filter(pid %in% pids_na_arr_dep) %>% 
+  filter(source == "NuStats") %>% View()
+```
+
+
+## Look at the code itself
+
+### check modified place file
+Compare `arrival_time_3` to `arr_time3_add1` (and the same for departure time)
+
+Created in "02_modify-place-file.R"
+
+```{r}
+pl_mod <- read_rds(here("data","modified_pldat.rds"))
+```
+
+```{r}
+pl_wat <- pl_mod %>% 
+  select(pid, PLANO, arrival_time_3, arr_time3_add1, departure_time_3, dep_time3_add1) %>% 
+  filter(is.na(arr_time3_add1))
+```
+
+
+
+### Check the creation of arrival_time_3
+
+Apparently, the arrival/departure times should NOT be NA'S. They should be 0's. Going back to the creation of the arrival and departure times in this format. This is in the script `01_03_time-in-min-since-3am.R`
+
+Below is the code from that script:
+```{r}
+convert_time_3A <- function(ext_time_col) {
+  t3 = ext_time_col - 180
+  if_else(t3 < 0, t3 + 24*60, t3)
+}
+```
+
+```{r}
+locations_timevars <- place %>% 
+  mutate(arrival_time_3   = convert_time_3A(ARR_HR * 60 + ARR_MIN),
+         departure_time_3 = convert_time_3A(DEP_HR * 60 + DEP_MIN),
+         place_duration   = departure_time_3 - arrival_time_3 + 1,
+         trip_duration    = TRIPDUR) # %>% select(SAMPN,PERNO,PLANO, arrival_time_3, departure_time_3, place_duration)
+```
+
+```{r}
+x <- locations_timevars %>% select(pid,PLANO, ARR_HR, ARR_MIN, arrival_time_3, DEP_HR, DEP_MIN, departure_time_3, place_duration) %>% mutate(arrhr_min = ARR_HR *60)
+```
+
+### SRBI vs NUSTATS
+what does srbi look like?
+```{r}
+srbi_place <- place %>% filter(source == "SRBI")
+```
+
+```{r}
+activity <- chts$ACTIVITY
+srbi_act <- activity %>% filter(source == "SRBI")
+```
+
+```{r}
+srbi_arr_dep_times <- srbi_act %>% select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% distinct()
+```
+
+
+What I need to do: 
+Get arrival/departure times from activity file from SRBI, divide by 60 to get the numbers we need, put that into the time-in-min-since-3am file. Could do an if/else statement.
+```{r}
+srbi_arr_dep_times <- srbi_act %>% 
+  select(SAMPN, PERNO, PLANO, ARRTM, DEPTM) %>% 
+  distinct() %>% 
+  mutate(arr_hr = ARRTM%/%3600,
+         arr_min = (ARRTM/60)%%60,
+         dep_hr = DEPTM%/%3600,
+         dep_min = (DEPTM/60)%%60)
+```
+
+
+
+
+
+
+
+
+
+
+# NA'S in the middle?
+
+```{r}
+x <- pl_na %>% filter(#ARRTM == "Refused" | 
+                        #ARRTM == "Don�t know"| 
+                        #DEPTM == "Refused" | 
+                        #DEPTM == "Don�t know"| 
+                        DEPTM == "Did not leave location") %>% 
+  .$pid %>% 
+  unique()
+pl_na %>% filter(pid %in% x) %>% View
+
+
+z <- pl_na %>% mutate(badguy = ARRTM == "Refused"| ARRTM == "Don�t know")
+
+
+```
+
+```{r}
+pl_na$ARRTM %>% unique()
+```
+
+```{r}
+z <- pl_na %>% mutate(badguy = ARRTM == "Refused"| ARRTM == "Don�t know")
+
+
+```
+
+```{r}
+pl_na$ARRTM %>% unique()
+```
+
+
+# fix the ppl who didn't leave the house from SRBI
+do they still have NA for their departure time? NOPE they're all good
+
+
+find them by saying: if plano == 1 and lastplace == T
+
+```{r}
+library(here);library(tidyverse)
+chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+place <- chts$PLACE
+library(magrittr)
+place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+# travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+```
+
+```{r}
+pl <- place %>% 
+  group_by(SAMPN, PERNO) %>% 
+  mutate(lastplace = (PLANO == max(PLANO))) %>% 
+  ungroup() %>% 
+  select(source, SAMPN, PERNO, PLANO, lastplace, ARR_HR, ARR_MIN, DEP_HR, DEP_MIN)
+```
+
+```{r}
+stayhome <- pl %>% filter(lastplace & PLANO == 1)
+```
+
+```{r}
+rm(stayhome, pl)
+```
+
+
+# check for start/end time consistency
+
+I will be using the "fixed" sample (made in `02_modify-place-file.R`) 
+
+### Make sure all start at time 1, end at time 1439 vs 1440
+```{r}
+library(here);library(magrittr);library(tidyverse)
+# chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+# place <- chts$PLACE
+
+# place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+# travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+pl_mod <- read_rds(here("data","modified_pldat.rds")) 
+```
+
+```{r}
+startendtimes <- pl_mod %>% 
+  group_by(SAMPN, PERNO) %>% 
+  mutate(firstplace = PLANO == min(PLANO),
+         lastplace = PLANO == max(PLANO)) %>% 
+  ungroup() %>% 
+  select(source, pid, SAMPN, PERNO, PLANO, arr_time3_add1, dep_time3_add1, firstplace, lastplace)
+
+place1_timenot1 <- startendtimes %>% filter(PLANO == 1 & arr_time3_add1 > 1)
+
+```
+
+```{r}
+pid_plano1_badarr <- place1_timenot1$pid %>% unique()
+```
+
+
+Do the travel rows add the missing info?
+```{r}
+travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+
+x <- travel_dat %>% filter(pid %in% pid_plano1_badarr)
+```
+NO it does not. it starts from the next place.
+
+
+Are the last place times 1440?
+```{r}
+lastpl_timenot1440 <- startendtimes %>% filter(lastplace & dep_time3_add1 < 1438)
+pid_plano1_baddep <- lastpl_timenot1440$pid %>% unique
+```
+THERE ARE 89 PEOPLE WITH DEPARTURE TIMES EARLIER THAN 1439
+
+Do the travel rows add the missing departure info?
+```{r}
+y <- travel_dat %>% filter(pid %in% pid_plano1_badarr) %>% arrange(pid, dep_time3_add1)
+```
+NO it does not.
+
+# check that arrival times come before departure times
+
+```{r}
+library(here);library(magrittr);library(tidyverse)
+# chts <- read_rds(here("data-raw", "chts_all_2019-06-18.rds")) # new fixed up one!
+# place <- chts$PLACE
+
+# place %<>% mutate(pid = str_c(SAMPN, PERNO, sep = "") %>% as.numeric())
+# travel_dat <- read_rds(here("data", "places_travel-added.rds"))
+pl_mod <- read_rds(here("data","modified_pldat.rds")) 
+```
+
+```{r}
+badsequences <- pl_mod %>% 
+  mutate(badseq = dep_time3_add1 - arr_time3_add1) %>% 
+  select(source,pid, PLANO, arr_time3_add1, dep_time3_add1, badseq) %>% 
+  filter(badseq < 1) 
+
+badseq_pid <-  badsequences %>%  .$pid %>% unique()
+
+```
+
+Are zero's ok? I think it has to be at least 1?
+
+902 with zeros or negative. could it be my fault? Check the activity file processing
+
+# Total complete households vs with incomplete households, same for people after removing the bad guys in both ways
+Both ways means removing whole households vs not removing whole households
+
+
+
+# WHO is in `pl_na`
+
+Here is what I have figured out:
+
+* All the people whose PLANO == 1, but arrival time is NOT NA are included in `pl_na`.
+* Apparently, the arrival/departure times should NOT be NA'S. They should be 0's.
+* There are 8080 in srbi, 109113 in nustats. And there are 8061 from srbi in the place file (the exact amount from srbi that are in the NA's)
+
+
+* after fixing the issues with the timing variables from SRBI, we have 985 pids left who have na's in their arrival/departure times
+* 809 respondents from SRBI said "refused" or "don't know" for at least 1 of the time responses for a place they went/activity they did 
+* People who said "did not leave location" 
+
+
+* after removing the 985 people:
+* THERE ARE 19 PEOPLE with place ==1 but start time is NOT 1. Missing time (all from srbi)
+* THERE ARE 89 PEOPLE WITH DEPARTURE TIMES EARLIER THAN 1439
+
+* manual removal pids:
+  + 1275701 (arrival times are not before departure times)

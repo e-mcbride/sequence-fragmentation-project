@@ -1,14 +1,14 @@
 # 01_06_pr-hh-pl-vars.R
 library(here); library(tidyverse)
 
-chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
+# chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
 
 ## Extract additional place-level fields
 
 
 # place_chars_other <- 
 chts_rel$PLACE %>%
-  select(SAMPN,PERNO,PLANO,PLAT=LAT,PLON=LON,MODE,TRIPDUR,PNAME:ZIP) %>% 
+  select(SAMPN,PERNO,PLANO,PLAT=LAT,PLON=LON,MODE,TRIPDUR,PTYPE,PNAME:ZIP) %>% 
   readr::write_rds(here("data", "pl-vars_places.rds"))
 
 ## Extract relevant person-level fields

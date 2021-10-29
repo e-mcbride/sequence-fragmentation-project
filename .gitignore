@@ -4,4 +4,7 @@
 .Ruserdata
 data
 tmp
+data-raw
+results
+figs
 

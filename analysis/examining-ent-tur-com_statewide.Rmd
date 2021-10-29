@@ -1,0 +1,56 @@
+---
+title: "Examining entropy, turbulence, and complexity for statewide analysis"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+# library(TraMineR)
+
+grp_en_tu <- read_rds(here::here("results","grpvars_ent-tur-com.rds")) %>% 
+  mutate(DOW = factor(DOW, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))
+
+```
+
+```{r echo=FALSE}
+hist(grp_en_tu$Complexity, main = NULL, xlab = "C Function of Entropy")
+```
+
+```{r}
+hist(grp_en_tu$Turbulence, main = NULL, xlab = "Turbulence")
+```
+
+```{r}
+hist(grp_en_tu$Entropy, main = NULL, xlab = "Entropy")
+```
+
+## Grouping variables
+
+```{r}
+grp_en_tu %>% ggplot(aes(x = Entropy)) + geom_histogram(binwidth = 0.05) + ggtitle("Entropy") +
+  theme_classic()
+```
+
+### Looking at DOW real quick. Differences between Ent and Tur
+```{r}
+grp_en_tu %>% 
+  group_by(DOW) %>% 
+  summarise(ent_med = median(Entropy)) %>% 
+  ggplot(aes(x = DOW, y = ent_med)) + geom_col()+ labs(title = "Entropy")
+```
+
+```{r}
+grp_en_tu %>%
+  group_by(DOW) %>% 
+  summarise(tur_med = median(Turbulence)) %>% 
+  ggplot(aes(x = DOW, y = tur_med)) + geom_col() + labs(title = "Turbulence")
+```
+
+```{r}
+grp_en_tu %>%
+  group_by(DOW) %>% 
+  summarise(c_med = median(C)) %>% 
+  ggplot(aes(x = DOW, y = c_med)) + geom_col() + labs(title = "Complexity")
+```
+

@@ -1,0 +1,258 @@
+---
+title: "Testing the 'Other' category stuff"
+output: html_notebook
+---
+
+The script `fixing-other-category.R` became the ground for fixing the issues within the place type. Once a final categorization has been decided, these changes will be implemented into the script that is in the data munging workflow called `01_02_classify-places-HWSO.R`
+
+```{r include=FALSE}
+source("fixing-other-category.R")
+```
+
+
+
+```{r}
+locs_rel_matched %>% 
+  group_by(place_type) %>% 
+  count() # %>% 
+  # View()
+```
+
+
+## Keeping track of the place counts in each round of "fixing" the other category:
+
+1. After 
+place_type      n
+<chr>       <int>
+1 Home      219141
+2 Other     230211
+3 School     11885
+4 Work       31084
+
+2. After 
+place_type      n
+<chr>       <int>
+1 Home       235333
+2 Other      214735
+3 School      11881
+4 Work        30372
+
+
+3. After fixing the "school" weighting
+
+place_type      n
+<chr>       <int>
+Home	      235333			
+Other	      214293			
+School	     12328			
+Work	       30367	
+
+4. fixing work_acts and school_acts to add more APURPs
+place_type      n
+<chr>       <int>
+Home	      235333			
+Other	      214169			
+School	     12339			
+Work	       30480	
+
+
+```{r}
+#' Below: Number of places in each category and number of people with each of those place types
+
+# pltype_frq <- locs_rel_matched %>% count(SAMPN,PERNO,place_type) %>%
+#   group_by(place_type) %>% summarise(`Total Place-Events` = sum(n), `People with this place type` = n())
+# 
+# pltype_frq
+# 
+# pltype_frq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
+```
+
+For each person, did they go to school/work on the diary day?
+
+```{r}
+locs_place_cat <- locs_rel_matched %>% 
+  group_by(SAMPN,PLANO) %>%
+  mutate(any_work   = any(place_type == 'Work'),
+         any_school = any(place_type == 'School'),
+         any_other  = any(place_type == 'Other')) %>% 
+  ungroup() %>%
+  select(SAMPN,PERNO,PLANO,place_type,any_work:any_other)
+```
+
+## Attaching place type to activity type
+```{r}
+activity <- chts_rel$ACTIVITY
+ac <- activity %>% select(source, SAMPN, PERNO, PLANO, ACTNO, APURP) 
+
+
+#get the new activity categories AND clean up category names
+# activities_crosswalk <- readxl::read_excel(here("data", "activity_purps_crosswalk_touppercase.xlsx"))
+# gather(key = "key", value = "old.apurp", -new.apurp, -Act_Cat) %>% 
+# select(-key)
+
+
+
+# act.cat <- ac %>% 
+#   left_join(activities_crosswalk, by = c("APURP" = "old.apurp")) %>% 
+#   mutate(APURP = new.apurp) %>% select(-new.apurp)
+
+
+act.place <- ac %>% left_join(locs_place_cat, by = c("SAMPN", 'PERNO', 'PLANO'))
+
+```
+
+What activities are done in place type other?
+
+```{r}
+act.place %>% 
+  filter(place_type == "Other") %>%
+  # group_by(APURP, place_type) %>% 
+  group_by(APURP) %>% 
+  count %>% 
+  # spread(place_type, n) %>% 
+  # arrange(desc(n)) %>%
+  # View()
+  clipr::write_clip() #pasted into Excel sheet `testing-new-other-catgory-counts.xlsx`
+```
+
+
+
+## What is still called Other?
+
+```{r}
+matching <- locs_rel_matched %>% 
+  select(SAMPN, PERNO, PLANO,
+         # LAT, LON, Home_Lat, Home_Lon, school_lat, school_lon, work_lat, work_lon, 
+         home_match_loc, home_match_name, school_match_lat, school_match_lon, school_match_name1, school_match_name2, school_match_acts, work_match_lat, work_match_lon, work_match_name1, work_match_name2, work_match_acts,
+         home_match_points, school_match_points, work_match_points,
+         place_type, TRIPDUR, PNAME, school_name, work_name, work_name2)
+
+matching %>% 
+  filter(place_type == "Other") %>% 
+  View()
+```
+
+```{r}
+place <- chts_rel$PLACE
+
+pl.name <- place %>% select(SAMPN, PERNO, PLANO, PNAME, LAT, LON)
+
+act.pl.name <- act.place %>% left_join(pl.name)
+
+act.pl.name %>% 
+  filter(place_type == "Other") %>% 
+  # filter(str_detect(APURP, "SCHOOL")) %>% 
+  filter(str_detect(APURP, "IN SCHOOL/CLASSROOM/LABORATORY")) %>% 
+  # select(place_type, APURP, PNAME) %>% 
+  # group_by(APURP) %>%
+  # count() %>%
+  View()
+```
+
+
+Add the "matching" thing to it instead of place:
+```{r}
+act.match <- act.place %>% left_join(matching)
+act.match %>% 
+  filter(place_type == "Other") %>%
+  # filter(place_type == "Home") %>% 
+  # filter(str_detect(APURP, "IN SCHOOL/CLASSROOM/LABORATORY")) %>%
+  # filter(str_detect(APURP, "ALL OTHER WORK-RELATED ACTIVITIES AT MY WORK")) %>%
+  # filter(str_detect(APURP, "ALL OTHER ACTIVITIES AT MY HOME")) %>%
+  filter(str_detect(APURP, "WORK-RELATED (MEETING, SALES CALL, DELIVERY)")) %>%
+  # group_by(PNAME) %>% 
+  # count() %>% 
+  # filter(PNAME == "HOME") %>%
+  View
+```
+
+
+
+#### Who are the ppl with "all other activities at my home" that are still not put in "Home" category?
+
+```{r}
+act.match %>% 
+  filter(place_type == "Other") %>% 
+  # filter(APURP == "ALL OTHER ACTIVITIES AT MY HOME") %>% 
+  # filter(str_detect(APURP, "WORK-RELATED (MEETING, SALES CALL, DELIVERY)")) %>%
+  View()
+```
+
+## FINDINGS ABOUT THE OTHER CATEGORY
+
+* There are places where the name (WORK or SCHOOL) match, but the lat/lon don't
+  + Sometimes because they did not put a lat/lon at all for their work, sometimes because they do not have a job that is in one place at a time (like landscaping)
+* There are places where the lat/lon match, but the place name is not WORK or SCHOOL
+* There are misspellings between work name and pname
+* There are people who put DK/RF when reporting work name, but then put it in PNAME
+* Some people put their titles in work_name instead of location of work (work_name = "Respiratory therapist", PNAME = "specific hospital")
+
+
+# More exploring what's wrong with "Other" (i think)
+(must run after `place-apurp-cross.R`)
+```{r}
+source(here("analysis","place-apurp-cross.R"))
+```
+
+
+```{r}
+pl.small <- locs_rel_matched %>% 
+  select(SAMPN, PERNO, PLANO, LAT, LON, Home_Lat, Home_Lon, MODE, PNAME, place_type, ACTDUR, TRIPDUR)
+
+
+act.pl.oth <- act.cat %>% 
+  left_join(pl.small, by = c("SAMPN", 'PERNO', 'PLANO'))%>% 
+  # filter(place_type == "Home")
+  filter(place_type == "Other")
+
+act.pl.oth %>% 
+  filter(APURP =="ALL OTHER ACTIVITIES AT MY HOME") %>% 
+  # filter(is.na(PNAME)) %>% 
+  mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
+  # summarise_at(vars(lat.dif, lon.dif), list(~max(., na.rm = TRUE), ~min(., na.rm = TRUE)))
+  View
+  # clipr::write_clip()
+```
+
+
+```{r}
+act.pl.oth %>% mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
+  View
+```
+
+
+Findings so far:
+
+* there are some places that people caled "home" that have a different lat/lon than the declared home lat/lon
+* There are 
+
+## This is something else idk what
+I think it's looking at issues with activity durations?
+```{r}
+act.pl.oth %>% 
+  filter(ACTDUR == 1439) %>% 
+  # filter(APURP == "LOOP TRIP (FOR INTERVIEWER ONLY-NOT LISTED ON DIARY)") %>% 
+    View()
+```
+
+
+```{r}
+act.pl.oth %>% mutate(lat.dif= (LAT - Home_Lat), lon.dif = (LON - Home_Lon)) %>% 
+  View
+```
+
+
+Findings so far:
+
+* there are some places that people caled "home" that have a different lat/lon than the declared home lat/lon
+* There are 
+
+
+
+### What are places that should be called "home" or "work" or "school" that are not being called that?
+
+
+
+
+
+

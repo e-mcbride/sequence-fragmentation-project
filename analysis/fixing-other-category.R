@@ -1,15 +1,20 @@
-# this is the next script
-# 01_02_name-of-script.R
+# this is a data exploration script. Should go into "/notebook" or equivalent
+
+#' this script does a few things:
+#' Most important right now: it looks at what activities are in "Other"(place x activity)
+#' this shows that there are locations catgorized as "other" that should be in other categories
+#' Now, a script will be made to identify this
+
 library(tidyverse); library(here)
 
-chts_rel <- readr::read_rds(here("data", "chts-all-tables_slo-sb.rds"))
 
-###' Process places table
+#####
+# Getting place type for all of CA 
+#####
 
-
-##' Classify locations based on person's anchor points
-
-#' First, pull the relevant locations from the household and person files and rename fields for consistency.
+# chts_rel <- read_rds("data/original/CHTS_all2018-03-05_.rds")
+chts_rel <- read_rds(here("data","chts_all_2019-05-22.rds")) # trying with new dataset
+# place <- chts_rel$PLACE
 
 home_locs <- chts_rel$HOUSEHOLD %>% select(SAMPN, Home_Lat=HLAT, Home_Lon=HLON)
 
@@ -19,9 +24,16 @@ school_work_locs <- chts_rel$PERSON %>%
 
 school_work_activities <- chts_rel$ACTIVITY %>%
   group_by(SAMPN, PERNO, PLANO) %>%
-  summarise(school_acts = any(APURP == 'IN SCHOOL/CLASSROOM/LABORATORY'),
-            work_acts   = any(APURP == 'WORK/JOB DUTIES'))
+  summarise(school_acts = any(APURP == 'IN SCHOOL/CLASSROOM/LABORATORY',
+                           str_detect(APURP, "AT SCHOOL")),
+         work_acts   = any(APURP == 'WORK/JOB DUTIES', 
+                           str_detect(APURP, "AT WORK"), 
+                           str_detect(APURP, "AT MY WORK")))
 
+# school_work_activities$work_acts %>% as.numeric() %>% sum(na.rm = TRUE)
+# 1. 39837
+# 2. 40373
+# 3. 40763
 
 #' A couple helper functions to identify place names with at least one word (by default length >= 4 characters) in common.
 
@@ -42,7 +54,7 @@ any_matching_elements <- function(list1, list2) {
 
 #' Attach the values to the place table.
 
-locations_rel <- chts_rel$PLACE %>%
+locs_rel <- chts_rel$PLACE %>%
   left_join(home_locs, by='SAMPN') %>%
   left_join(school_work_locs, by=c('SAMPN','PERNO')) %>%
   left_join(school_work_activities, by=c('SAMPN','PERNO','PLANO'))
@@ -52,14 +64,14 @@ locations_rel <- chts_rel$PLACE %>%
 
 lat_match <- 0.0001 # ~ 11.1 meters
 lon_match <- lat_match * 0.829 # ~ 11.1 meters at latitude of Santa Maria, CA
-locations_rel_matchpts <- locations_rel %>%
+locs_rel_matchpts <- locs_rel %>%
   mutate(home_match_loc     = abs(LAT - Home_Lat) < lat_match & abs(LON - Home_Lon) < lon_match,
          home_match_name    = PNAME == 'HOME',
          school_match_lat   = abs(LAT - school_lat) < lat_match,
          school_match_lon   = abs(LON - school_lon) < lon_match,
          school_match_name1 = PNAME == 'SCHOOL',
          school_match_name2 = one_word_match(PNAME, school_name) | (PNAME == school_name),
-         school_match_acts  = school_acts * 2,
+         school_match_acts  = school_acts * 3,
          work_match_lat     = abs(LAT - work_lat) < lat_match,
          work_match_lon     = abs(LON - work_lon) < lon_match,
          work_match_name1   = PNAME == 'WORK',
@@ -69,9 +81,10 @@ locations_rel_matchpts <- locations_rel %>%
 
 
 #' Calculate total matches and choose place category.
+#' this basically says: "if either the place name or place location match as expected, then 
 
-locations_rel_matched <- locations_rel_matchpts %>%
-  mutate(home_match_points   = home_match_loc + home_match_name,
+locs_rel_matched <- locs_rel_matchpts %>%
+  mutate(home_match_points   = rowSums(select(., starts_with('home_match')), na.rm=T),
          school_match_points = rowSums(select(., starts_with('school_match')), na.rm=T),
          work_match_points   = rowSums(select(., starts_with('work_match')), na.rm=T),
          place_type = case_when(home_match_points >= 1 ~ 'Home',
@@ -81,26 +94,8 @@ locations_rel_matched <- locations_rel_matchpts %>%
                                   work_match_points > school_match_points ~ 'Work',
                                 TRUE ~ 'Other'))
 
-pltype_frq <- locations_rel_matched %>% count(SAMPN,PERNO,place_type) %>%
-  group_by(place_type) %>% summarise(`Total Place-Events` = sum(n), `People with this place type` = n())
-
-pltype_frq
-
-pltype_frq %>% write_csv(here("figs", "place-type-freq-table-HOSW.csv"))
-
-#' for each person, did they go to school/work on the diary day?
-locations_place_cat <- locations_rel_matched %>% 
-  group_by(SAMPN,PLANO) %>%
-  mutate(any_work   = any(place_type == 'Work'),
-         any_school = any(place_type == 'School'),
-         any_other  = any(place_type == 'Other')) %>% 
-  ungroup() %>%
-  select(SAMPN,PERNO,PLANO,place_type,any_work:any_other)
-
-locations_place_cat %>% write_rds(here("data", "locations-place-cat_places.rds"))
-
-
-
-
+#####
+# override with "at my work", "in school", "at school", "at work"
+#####
 
 
